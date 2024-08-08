@@ -20,6 +20,8 @@ export class CoursesComponent implements OnInit {
   }
 
   listCourses() {
-    this.courses = this.coursesService.list();
+    this.coursesService.list().subscribe({
+      next: courses => this.courses = courses,
+    });
   }
 }

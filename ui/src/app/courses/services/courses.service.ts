@@ -1,25 +1,20 @@
 import { Injectable } from '@angular/core';
 import { Course } from '../model/course';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CoursesService {
 
+  private readonly API = '/assets/courses.json'
+
   constructor(
     private http: HttpClient,
   ) { }
 
-  list(): Course[] {
-    return [{
-      _id: '1',
-      name: 'introduction on web',
-      category: 'web'
-    }, {
-      _id: '2',
-      name: 'introduction to sec',
-      category: 'security'
-    }];
+  list(): Observable<Course[]> {
+    return this.http.get<Course[]>(this.API);
   }
 }
