@@ -17,7 +17,6 @@ export class CoursesService {
   list(): Observable<Course[]> {
     return this.http.get<Course[]>(this.API)
     .pipe(
-      delay(2000), // mocked delay 2 seconds
       first(),// fecha a conexão e inscrições depois da primeira resposta
       tap(
         courses => console.log(courses) // log data 

@@ -3,12 +3,13 @@ import { CommonModule } from '@angular/common';
 import { MaterialModule } from './material/material.module';
 import { ErrorDialogComponent } from './components/error-dialog/error-dialog.component';
 
-import {MatDialogModule} from '@angular/material/dialog'; 
+import { CategoryPipe } from './pipes/category.pipe'; 
 
 
 @NgModule({
   declarations: [
-    ErrorDialogComponent
+    ErrorDialogComponent,
+    CategoryPipe
   ],
   imports: [
     CommonModule,
@@ -16,6 +17,7 @@ import {MatDialogModule} from '@angular/material/dialog';
   ],
   exports: [
     MaterialModule,
+    CategoryPipe,
   ]
 })
 export class SharedModule { }
