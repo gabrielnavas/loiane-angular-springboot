@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Course } from '../model/course';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { delay, first, Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +15,13 @@ export class CoursesService {
   ) { }
 
   list(): Observable<Course[]> {
-    return this.http.get<Course[]>(this.API);
+    return this.http.get<Course[]>(this.API)
+    .pipe(
+      delay(2000), // mocked delay 2 seconds
+      first(),// fecha a conexão e inscrições depois da primeira resposta
+      tap(
+        courses => console.log(courses) // log data 
+      )
+    );
   }
 }

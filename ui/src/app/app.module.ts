@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MaterialModule } from './shared/material/material.module';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -15,6 +16,7 @@ import { MaterialModule } from './shared/material/material.module';
     BrowserModule,
     AppRoutingModule,
     MaterialModule,
+    HttpClientModule,
   ],
   providers: [
     provideClientHydration(),

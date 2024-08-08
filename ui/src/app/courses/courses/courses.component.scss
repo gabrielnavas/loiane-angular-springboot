@@ -1,3 +1,19 @@
 mat-card {
+  display: flex;
+  align-items: center;
   padding: 1.05rem
+}
+
+mat-card-title {
+  width: 100%;
+}
+
+mat-card-content {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.loading-spinner {
+  margin: 1.02rem;
 }

@@ -10,6 +10,7 @@ import { CoursesService } from '../services/courses.service';
 export class CoursesComponent implements OnInit {
   displayedColumns: string[] = ['name', 'category'];
   courses: Course[] = []
+  isLoadingCourses = false;
 
   constructor(
     private readonly coursesService: CoursesService,
@@ -20,8 +21,12 @@ export class CoursesComponent implements OnInit {
   }
 
   listCourses() {
+    this.isLoadingCourses=true;
     this.coursesService.list().subscribe({
-      next: courses => this.courses = courses,
+      next: courses => {
+        this.courses = courses;
+        this.isLoadingCourses = false;
+      },
     });
   }
 }
