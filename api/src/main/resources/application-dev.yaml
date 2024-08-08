@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5434/postgres
+    username: postgres
+    password: postgres123
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+application:
+  cors:
+    urls: http://localhost:4200
+    allowed-methods: POST,GET,PATCH,DELETE,OPTIONS
+    allowed-headers: Origin,Content-Type,Accept,Authorization
+
+server:
+  port: 8088
