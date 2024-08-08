@@ -1,6 +1,9 @@
 <mat-card>
   <mat-card-title>
-    <mat-toolbar color="primary">Cursos disponíveis</mat-toolbar>
+    <mat-toolbar color="primary">
+      <span>Cursos disponíveis</span>
+      <mat-icon fontIcon="school"></mat-icon>
+    </mat-toolbar>
   </mat-card-title>
   <mat-card-content>
     <table *ngIf="!isLoadingCourses else loadingSpinner" mat-table [dataSource]="courses" class="mat-elevation-z8">
@@ -24,3 +27,5 @@
 <ng-template #loadingSpinner>
   <mat-spinner class="loading-spinner"></mat-spinner>
 </ng-template>
+
+
