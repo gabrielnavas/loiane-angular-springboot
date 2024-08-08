@@ -8,7 +8,7 @@ import { delay, first, Observable, tap } from 'rxjs';
 })
 export class CoursesService {
 
-  private readonly API = '/assets/courses.json'
+  private readonly API = '/assets/courses.'
 
   constructor(
     private http: HttpClient,
