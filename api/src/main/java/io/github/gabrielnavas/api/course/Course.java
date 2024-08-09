@@ -3,6 +3,7 @@ package io.github.gabrielnavas.api.course;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -24,4 +25,7 @@ public class Course {
 
     @Column(nullable = false, length = 150)
     private String category;
+
+    @Column(nullable = false, name = "created_at")
+    private LocalDateTime createdAt;
 }

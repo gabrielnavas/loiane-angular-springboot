@@ -3,6 +3,7 @@ import { Course } from '../model/course';
 import { CoursesService } from '../services/courses.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorDialogComponent } from '../../shared/components/error-dialog/error-dialog.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-courses',
@@ -10,13 +11,15 @@ import { ErrorDialogComponent } from '../../shared/components/error-dialog/error
   styleUrl: './courses.component.scss'
 })
 export class CoursesComponent implements OnInit {
-  displayedColumns: string[] = ['name', 'category'];
+  displayedColumns: string[] = ['name', 'category', 'actions'];
   courses: Course[] = []
   isLoadingCourses = false;
 
   constructor(
     private readonly coursesService: CoursesService,
-    private readonly dialog: MatDialog
+    private readonly dialog: MatDialog,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
   ) { }
 
   ngOnInit(): void {
@@ -31,14 +34,30 @@ export class CoursesComponent implements OnInit {
         this.isLoadingCourses = false;
       },
       error: err => {
-        this.showMessage('vix, deu problema!')
+        this.showMessage('Atenção!', 'contate o administrador do sistema!')
       }
     });
   }
 
-  showMessage(message: string) {
+  showMessage(title: string, content: string) {
     this.dialog.open(ErrorDialogComponent, {
-      data: message
+      data: {
+        title: title,
+        content: content
+      }
     });
+  }
+
+  onClickNew() {
+    // rota relativa a atual
+    this.router.navigate(['new'], { relativeTo: this.route });
+  }
+
+  onClickActionEdit(course: Course) {
+    console.log(course);
+  }
+
+  onClickDelete(courseId: string) {
+    console.log(courseId);
   }
 }

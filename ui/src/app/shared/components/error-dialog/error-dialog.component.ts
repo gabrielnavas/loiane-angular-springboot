@@ -4,6 +4,10 @@ import {
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
 
+type DialogData = {
+  title: string,
+  content: string
+}
 
 @Component({
   selector: 'app-error-dialog',
@@ -11,8 +15,5 @@ import {
   styleUrl: './error-dialog.component.scss'
 })
 export class ErrorDialogComponent {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: string) { }
-  
-  onClickClose() {
-  }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData) { }
 }

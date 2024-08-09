@@ -1,0 +1,33 @@
+<div class="container">
+  <mat-card appearance="outlined">
+    <mat-card-header>
+      <mat-toolbar color="primary">
+        <mat-card-title>Novo curso</mat-card-title>
+        <mat-card-subtitle>Adicione os dados necessários</mat-card-subtitle>
+      </mat-toolbar>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="form">
+        <mat-form-field>
+          <mat-label>Nome</mat-label>
+          <input matInput placeholder="Ex. John Walker" formControlName="name" maxlength="100">
+          <mat-hint>{{ form.value.name.length }}/100</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Categoria</mat-label>
+          <mat-select formControlName="category">
+            @for (category of categories; track category) {
+            <mat-option [value]="category.id">{{category.text}}</mat-option>
+            }
+          </mat-select>
+          <mat-hint>{{ form.value.category === '' ? 'Selecione a categoria' : '' }}</mat-hint>
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" (click)="onClickSave()">Salvar</button>
+      <button mat-stroked-button style="margin-left: 1.05rem;" (click)="onClickCancel()">Cancelar</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

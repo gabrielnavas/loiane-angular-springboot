@@ -3,8 +3,10 @@ package io.github.gabrielnavas.api.course;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,6 +34,7 @@ public class CourseService {
         Course course = Course.builder()
                 .name(request.name())
                 .category(request.category())
+                .createdAt(LocalDateTime.now())
                 .build();
         course = courseRepository.save(course);
         return CourseResponse.builder()
@@ -65,7 +68,8 @@ public class CourseService {
     }
 
     public List<CourseResponse> list(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+        Pageable pageable = PageRequest.of(page, size, sort);
         return courseRepository.findAll(pageable)
                 .stream()
                 .map(course -> CourseResponse.builder()

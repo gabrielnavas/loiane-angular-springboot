@@ -1,0 +1,33 @@
+.container {
+  width: 100%;
+}
+
+mat-card {
+  margin: 1.05rem 1.5rem;
+}
+
+mat-toolbar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+mat-card-subtitle {
+  color: gainsboro;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+mat-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 1.5rem;
+}
+
+mat-form-field {
+  padding-bottom: .65rem;
+}
+
