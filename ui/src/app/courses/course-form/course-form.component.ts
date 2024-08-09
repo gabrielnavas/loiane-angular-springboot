@@ -8,6 +8,7 @@ import { ErrorDialogComponent } from '../../shared/components/error-dialog/error
 import { MatInput } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-course-form',
@@ -26,12 +27,12 @@ export class CourseFormComponent implements AfterViewInit {
 
   constructor(
     private readonly formBuilder: FormBuilder,
-    private readonly router: Router,
     private readonly courseService: CoursesService,
     private readonly dialog: MatDialog,
     private readonly snack: MatSnackBar,
     private readonly cdr: ChangeDetectorRef,
     private readonly title: Title,
+    private readonly location: Location,
   ) {
     this.initForm();
     this.initTitle()
@@ -43,7 +44,7 @@ export class CourseFormComponent implements AfterViewInit {
   }
 
   onClickCancel() {
-    this.router.navigate(['']);
+    this.location.back();
   }
 
   onClickSave() {
