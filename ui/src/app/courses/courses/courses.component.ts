@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Course } from '../model/course';
 import { CoursesService } from '../services/courses.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -46,6 +46,11 @@ export class CoursesComponent implements OnInit {
         content: content
       }
     });
+  }
+
+  @HostListener('document:keydown.n', ['$event'])
+  private handleEnterKey(event: KeyboardEvent) {
+    this.onClickNew();
   }
 
   onClickNew() {
