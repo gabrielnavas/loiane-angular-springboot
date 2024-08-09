@@ -14,8 +14,8 @@ export class CoursesListComponent {
   @Input() courses: Course[] = []
   @Input() isLoadingCourses = false;
 
-  displayedColumns: string[] = ['name', 'category', 'actions'];
-  
+  readonly displayedColumns: string[] = ['name', 'category', 'actions'];
+
   constructor(
     private readonly router: Router,
     private readonly route: ActivatedRoute,
