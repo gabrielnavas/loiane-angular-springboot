@@ -6,6 +6,7 @@ import { Course } from '../model/course';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorDialogComponent } from '../../shared/components/error-dialog/error-dialog.component';
 import { MatInput } from '@angular/material/input';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-course-form',
@@ -26,7 +27,7 @@ export class CourseFormComponent implements AfterViewInit {
     private readonly router: Router,
     private readonly courseService: CoursesService,
     private readonly dialog: MatDialog,
-
+    private readonly snack: MatSnackBar,
   ) {
     this.form = this.formBuilder.group({
       name: [''],
@@ -53,8 +54,6 @@ export class CourseFormComponent implements AfterViewInit {
   }
 
   onClickSave() {
-    console.log(this.form.value.name);
-
     const course: Course = {
       id: "0",
       name: this.form.value.name,
@@ -64,7 +63,9 @@ export class CourseFormComponent implements AfterViewInit {
       next: () => {
         this.clearForm();
         this.nameInput.nativeElement.focus();
-      }
+        this.snack.open('Curso criado!', '', { duration: 5000,  })
+      },
+      error: (err: Error) => this.showMessage('Atenção!', 'Não foi possível criar um novo curso.')
     })
   }
 
