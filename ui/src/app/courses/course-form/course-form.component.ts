@@ -51,10 +51,7 @@ export class CourseFormComponent implements AfterViewInit {
       this.form.markAllAsTouched(); // Marcar todos os campos como "tocados"
       return;
     } else {
-      this.courseService.save({
-        name: this.form.value.name!,
-        category: this.form.value.category!,
-      }).subscribe({
+      this.courseService.save(this.form.value).subscribe({
         next: () => this.onSaveSuccess(),
         error: (err: Error) => this.onSaveError(err)
       })

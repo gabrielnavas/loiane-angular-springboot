@@ -14,7 +14,7 @@ export class CoursesService {
     private http: HttpClient,
   ) { }
 
-  save(course: Course): Observable<void> {
+  save(course: Partial<Course>): Observable<void> {
     const body = { name: course.name, category: course.category };
     return this.http.post<void>(this.API, body);
   }
