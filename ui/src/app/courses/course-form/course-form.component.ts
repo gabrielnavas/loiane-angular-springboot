@@ -29,7 +29,7 @@ export class CourseFormComponent implements AfterViewInit {
     private readonly courseService: CoursesService,
     private readonly dialog: MatDialog,
     private readonly snack: MatSnackBar,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {
     this.initForm();
   }
@@ -62,6 +62,16 @@ export class CourseFormComponent implements AfterViewInit {
         error: (err: Error) => this.showMessage('Atenção!', 'Não foi possível criar um novo curso.')
       })
     }
+  }
+
+  @HostListener('document:keydown.enter', ['$event'])
+  private handleEnterKey(event: KeyboardEvent) {
+    this.onClickSave();
+  }
+
+  @HostListener('document:keydown.esc', ['$event'])
+  private handleEscKey(event: KeyboardEvent) {
+    this.onClickCancel();
   }
 
   private showMessage(title: string, content: string) {

@@ -48,8 +48,8 @@ export class CoursesComponent implements OnInit {
     });
   }
 
-  @HostListener('document:keydown.n', ['$event'])
-  private handleEnterKey(event: KeyboardEvent) {
+  @HostListener('document:keydown.alt.n', ['$event'])
+  private handleAltNKey(event: KeyboardEvent) {
     this.onClickNew();
   }
 
