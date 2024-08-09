@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ErrorDialogComponent } from '../../shared/components/error-dialog/error-dialog.component';
 import { MatInput } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-course-form',
@@ -29,11 +30,13 @@ export class CourseFormComponent implements AfterViewInit {
     private readonly courseService: CoursesService,
     private readonly dialog: MatDialog,
     private readonly snack: MatSnackBar,
-    private cdr: ChangeDetectorRef,
+    private readonly cdr: ChangeDetectorRef,
+    private readonly title: Title,
   ) {
     this.initForm();
+    this.initTitle()
   }
-  
+
   ngAfterViewInit(): void {
     this.nameInput.nativeElement.focus();
     this.cdr.detectChanges(); // Força a detecção de mudanças após a view ter sido inicializada
@@ -95,5 +98,9 @@ export class CourseFormComponent implements AfterViewInit {
       name: '',
       category: '',
     });
+  }
+
+  private initTitle() {
+    this.title.setTitle('Curso | Novo curso')
   }
 }

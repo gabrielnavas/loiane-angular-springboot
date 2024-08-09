@@ -4,6 +4,7 @@ import { CoursesService } from '../services/courses.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorDialogComponent } from '../../shared/components/error-dialog/error-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-courses',
@@ -20,10 +21,12 @@ export class CoursesComponent implements OnInit {
     private readonly dialog: MatDialog,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
+    private readonly title: Title,
   ) { }
 
   ngOnInit(): void {
     this.listCourses();
+    this.initTitle();
   }
 
   listCourses() {
@@ -64,5 +67,9 @@ export class CoursesComponent implements OnInit {
 
   onClickDelete(courseId: string) {
     console.log(courseId);
+  }
+
+  private initTitle() {
+    this.title.setTitle('Curso | Lista de cursos')
   }
 }
