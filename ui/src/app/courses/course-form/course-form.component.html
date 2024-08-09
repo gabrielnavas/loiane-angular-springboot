@@ -10,7 +10,7 @@
       <form [formGroup]="form">
         <mat-form-field>
           <mat-label>Nome</mat-label>
-          <input matInput placeholder="Ex. John Walker" formControlName="name" maxlength="100">
+          <input #nameInput matInput placeholder="Ex. John Walker" formControlName="name" maxlength="100">
           <mat-hint>{{ form.value.name.length }}/100</mat-hint>
         </mat-form-field>
 
