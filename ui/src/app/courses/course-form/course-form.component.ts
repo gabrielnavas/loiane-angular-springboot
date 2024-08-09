@@ -51,20 +51,24 @@ export class CourseFormComponent implements AfterViewInit {
       this.form.markAllAsTouched(); // Marcar todos os campos como "tocados"
       return;
     } else {
-      const course: Course = {
-        id: "0",
+      this.courseService.save({
         name: this.form.value.name,
         category: this.form.value.category,
-      }
-      this.courseService.save(course).subscribe({
-        next: () => {
-          this.clearForm();
-          this.nameInput.nativeElement.focus();
-          this.snack.open('Curso criado!', '', { duration: 5000, })
-        },
-        error: (err: Error) => this.showMessage('Atenção!', 'Não foi possível criar um novo curso.')
+      }).subscribe({
+        next: () => this.onSaveSuccess(),
+        error: (err: Error) => this.onSaveError(err)
       })
     }
+  }
+
+  private onSaveSuccess() {
+    this.clearForm();
+    this.nameInput.nativeElement.focus();
+    this.snack.open('Curso criado!', '', { duration: 5000, })
+  }
+
+  private onSaveError(err: Error): void {
+    this.showMessage('Atenção!', 'Não foi possível criar um novo curso.')
   }
 
   @HostListener('document:keydown.enter', ['$event'])
