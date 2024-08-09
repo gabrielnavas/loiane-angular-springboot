@@ -30,7 +30,7 @@ export class CourseFormComponent implements AfterViewInit {
     private readonly courseService: CoursesService,
     private readonly dialog: MatDialog,
     private readonly snack: MatSnackBar,
-    private readonly cdr: ChangeDetectorRef,
+    private readonly detectChangesRef: ChangeDetectorRef,
     private readonly title: Title,
     private readonly location: Location,
   ) {
@@ -39,7 +39,7 @@ export class CourseFormComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.nameInput.nativeElement.focus();
-    this.cdr.detectChanges(); // Força a detecção de mudanças após a view ter sido inicializada
+    this.detectChangesRef.detectChanges(); 
   }
 
   onClickCancel() {
@@ -48,7 +48,7 @@ export class CourseFormComponent implements AfterViewInit {
 
   onClickSave() {
     if (this.form.invalid) {
-      this.form.markAllAsTouched(); // Marcar todos os campos como "tocados"
+      this.form.markAllAsTouched(); 
       return;
     } else {
       this.courseService.save(this.form.value).subscribe({
