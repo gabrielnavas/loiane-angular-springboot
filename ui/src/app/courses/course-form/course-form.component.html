@@ -10,18 +10,23 @@
       <form [formGroup]="form">
         <mat-form-field>
           <mat-label>Nome</mat-label>
-          <input #nameInput matInput placeholder="Ex. John Walker" formControlName="name" maxlength="100">
-          <mat-hint>{{ form.value.name.length }}/100</mat-hint>
+          <input #nameInput matInput placeholder="Ex. John Walker" formControlName="name" minlength="2" maxlength="100">
+          <mat-error *ngIf="form.get('name')?.invalid">
+            <span *ngIf="form.get('name')?.hasError('required')">Nome é obrigatório.</span>
+            <span *ngIf="form.get('name')?.hasError('minlength')">Nome deve ter no mínimo {{ nameInput.minLength }} caracteres.</span>
+            <span *ngIf="form.get('name')?.hasError('maxlength')">Nome deve ter no máximo {{ nameInput.maxLength }} caracteres.</span>
+          </mat-error>
+          <mat-hint>{{ form.value.name.length }}/{{ nameInput.maxLength }}</mat-hint>
         </mat-form-field>
 
         <mat-form-field>
           <mat-label>Categoria</mat-label>
           <mat-select formControlName="category">
-            @for (category of categories; track category) {
-            <mat-option [value]="category.id">{{category.text}}</mat-option>
-            }
+            <mat-option *ngFor="let category of categories" [value]="category.id">{{ category.text }}</mat-option>
           </mat-select>
-          <mat-hint>{{ form.value.category === '' ? 'Selecione a categoria' : '' }}</mat-hint>
+          <mat-error *ngIf="form.get('category')?.touched && form.get('category')?.invalid">
+            Categoria é obrigatória.
+          </mat-error>
         </mat-form-field>
       </form>
     </mat-card-content>
