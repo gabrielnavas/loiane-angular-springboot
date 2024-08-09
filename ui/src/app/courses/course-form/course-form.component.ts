@@ -1,11 +1,8 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormBuilder, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { CoursesService } from '../services/courses.service';
-import { Course } from '../model/course';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorDialogComponent } from '../../shared/components/error-dialog/error-dialog.component';
-import { MatInput } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
 import { Location } from '@angular/common';
@@ -16,7 +13,10 @@ import { Location } from '@angular/common';
   styleUrl: './course-form.component.scss'
 })
 export class CourseFormComponent implements AfterViewInit {
-  form!: FormGroup;
+  form = this.formBuilder.group({
+    name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
+    category: ['', Validators.required]
+  });
 
   categories = [
     { id: 'front-end', text: 'Front-end' },
@@ -26,7 +26,7 @@ export class CourseFormComponent implements AfterViewInit {
   @ViewChild('nameInput') nameInput!: ElementRef<HTMLInputElement>;
 
   constructor(
-    private readonly formBuilder: FormBuilder,
+    private readonly formBuilder: NonNullableFormBuilder,
     private readonly courseService: CoursesService,
     private readonly dialog: MatDialog,
     private readonly snack: MatSnackBar,
@@ -34,7 +34,6 @@ export class CourseFormComponent implements AfterViewInit {
     private readonly title: Title,
     private readonly location: Location,
   ) {
-    this.initForm();
     this.initTitle()
   }
 
@@ -53,8 +52,8 @@ export class CourseFormComponent implements AfterViewInit {
       return;
     } else {
       this.courseService.save({
-        name: this.form.value.name,
-        category: this.form.value.category,
+        name: this.form.value.name!,
+        category: this.form.value.category!,
       }).subscribe({
         next: () => this.onSaveSuccess(),
         error: (err: Error) => this.onSaveError(err)
@@ -88,13 +87,6 @@ export class CourseFormComponent implements AfterViewInit {
         title: title,
         content: content
       }
-    });
-  }
-
-  private initForm() {
-    this.form = this.formBuilder.group({
-      name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
-      category: ['', Validators.required]
     });
   }
 
