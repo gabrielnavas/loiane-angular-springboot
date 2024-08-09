@@ -14,7 +14,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrl: './course-form.component.scss'
 })
 export class CourseFormComponent implements AfterViewInit {
-  form: FormGroup;
+  form!: FormGroup;
+
   categories = [
     { id: 'front-end', text: 'Front-end' },
     { id: 'back-end', text: 'Back-end' },
@@ -30,12 +31,9 @@ export class CourseFormComponent implements AfterViewInit {
     private readonly snack: MatSnackBar,
     private cdr: ChangeDetectorRef
   ) {
-    this.form = this.formBuilder.group({
-      name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
-      category: ['', Validators.required]
-    });
+    this.initForm();
   }
-
+  
   ngAfterViewInit(): void {
     this.nameInput.nativeElement.focus();
     this.cdr.detectChanges(); // Força a detecção de mudanças após a view ter sido inicializada
@@ -43,15 +41,6 @@ export class CourseFormComponent implements AfterViewInit {
 
   onClickCancel() {
     this.router.navigate(['']);
-  }
-
-  showMessage(title: string, content: string) {
-    this.dialog.open(ErrorDialogComponent, {
-      data: {
-        title: title,
-        content: content
-      }
-    });
   }
 
   onClickSave() {
@@ -73,6 +62,22 @@ export class CourseFormComponent implements AfterViewInit {
         error: (err: Error) => this.showMessage('Atenção!', 'Não foi possível criar um novo curso.')
       })
     }
+  }
+
+  private showMessage(title: string, content: string) {
+    this.dialog.open(ErrorDialogComponent, {
+      data: {
+        title: title,
+        content: content
+      }
+    });
+  }
+
+  private initForm() {
+    this.form = this.formBuilder.group({
+      name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
+      category: ['', Validators.required]
+    });
   }
 
   private clearForm() {
