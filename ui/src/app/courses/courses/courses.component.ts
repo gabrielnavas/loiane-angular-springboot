@@ -12,21 +12,18 @@ import { Title } from '@angular/platform-browser';
   styleUrl: './courses.component.scss'
 })
 export class CoursesComponent implements OnInit {
-  displayedColumns: string[] = ['name', 'category', 'actions'];
   courses: Course[] = []
   isLoadingCourses = false;
 
   constructor(
     private readonly coursesService: CoursesService,
     private readonly dialog: MatDialog,
-    private readonly router: Router,
-    private readonly route: ActivatedRoute,
     private readonly title: Title,
   ) { }
 
   ngOnInit(): void {
-    this.listCourses();
     this.initTitle();
+    this.listCourses();
   }
 
   listCourses() {
@@ -37,7 +34,10 @@ export class CoursesComponent implements OnInit {
         this.isLoadingCourses = false;
       },
       error: err => {
-        this.showMessage('Atenção!', 'contate o administrador do sistema!')
+        this.showMessage(
+          'Atenção!', 
+          'contate o administrador do sistema!'
+        );
       }
     });
   }
@@ -49,24 +49,6 @@ export class CoursesComponent implements OnInit {
         content: content
       }
     });
-  }
-
-  @HostListener('document:keydown.alt.n', ['$event'])
-  private handleAltNKey(event: KeyboardEvent) {
-    this.onClickNew();
-  }
-
-  onClickNew() {
-    // rota relativa a atual
-    this.router.navigate(['new'], { relativeTo: this.route });
-  }
-
-  onClickActionEdit(course: Course) {
-    console.log(course);
-  }
-
-  onClickDelete(courseId: string) {
-    console.log(courseId);
   }
 
   private initTitle() {
