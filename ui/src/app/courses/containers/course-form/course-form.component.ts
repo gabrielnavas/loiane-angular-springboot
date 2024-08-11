@@ -15,12 +15,8 @@ import { Course } from '../../model/course';
   styleUrl: './course-form.component.scss'
 })
 export class CourseFormComponent implements OnInit, AfterViewInit {
-  formEdit = {
-    courseToEdit: {} as Course,
-    isEdit: false,
-  };
-
   form = this.formBuilder.group({
+    id: ['',],
     name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
     category: ['', Validators.required]
   });
@@ -54,12 +50,12 @@ export class CourseFormComponent implements OnInit, AfterViewInit {
   }
 
   onClickFinishForm() {
-    if(this.formEdit.isEdit) {
+    if (this.form.value.id) {
       this.onClickEdit();
+      this.location.back();
     } else {
       this.onClickSave();
     }
-    this.location.back();
   }
 
   onClickCancel() {
@@ -84,9 +80,10 @@ export class CourseFormComponent implements OnInit, AfterViewInit {
       return;
     } else {
       this.courseService.edit(
-        this.formEdit.courseToEdit.id, 
-        this.form.value
-      ).subscribe({
+        this.form.value.id!, {
+        name: this.form.value.name,
+        category: this.form.value.category,
+      }).subscribe({
         next: () => this.onEditSuccess(),
         error: (err: Error) => this.onEditError(err)
       })
@@ -94,16 +91,15 @@ export class CourseFormComponent implements OnInit, AfterViewInit {
   }
 
   private loadCourse() {
-    this.formEdit.courseToEdit = this.route.snapshot.data['course'];
-    if(this.formEdit.courseToEdit !== undefined) {
-      this.formEdit.isEdit = true;
-      const course = this.formEdit.courseToEdit;
-
+    const course = this.route.snapshot.data['course'] as Course | undefined;
+    if (course !== undefined) {
+      const category = this.categories.find(
+        category => category.id === course.category
+      );
       this.form.setValue({
+        id: course.id,
         name: course.name,
-        category: this.categories.find(
-          category => category.id === course.category
-        )?.id as string,
+        category: category!.id as string,
       })
     }
   }
