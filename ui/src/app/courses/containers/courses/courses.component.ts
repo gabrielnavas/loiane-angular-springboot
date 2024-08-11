@@ -33,7 +33,7 @@ export class CoursesComponent implements OnInit {
   }
 
   onClickEdit(course: Course) {
-    console.log(course);
+    this.router.navigate(['edit', course.id], { relativeTo: this.route });
   }
 
   onClickDelete(courseId: string) {

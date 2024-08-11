@@ -19,13 +19,31 @@ export class CoursesService {
     return this.http.post<void>(this.API, body);
   }
 
+  edit(courseId: string, course: Partial<Course>): Observable<void> {
+    const url = `${this.API}/${courseId}`;
+    const body = { name: course.name, category: course.category };
+    return this.http.patch<void>(url, body);
+  }
+
   list(): Observable<Course[]> {
-    return this.http.get<Course[]>(`${this.API}?page=0&size=10`)
+    const url = `${this.API}?page=0&size=10`;
+    return this.http.get<Course[]>(url)
       .pipe(
         first(),// fecha a conexão e inscrições depois da primeira resposta
         tap(
           courses => console.log(courses) // log data 
         )
       );
+  }
+
+  getById(courseId: string): Observable<Course> {
+    const url = `${this.API}/${courseId};`
+    return this.http.get<Course>(url)
+      .pipe(
+        first(),
+        tap(
+          course => console.log(course) // log data 
+        )
+      )
   }
 }
