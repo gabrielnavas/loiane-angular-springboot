@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { Course } from '../model/course';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CoursesService } from '../services/courses.service';
@@ -16,21 +16,22 @@ export class CoursesListComponent {
 
   readonly displayedColumns: string[] = ['name', 'category', 'actions'];
 
-  constructor(
-    private readonly router: Router,
-    private readonly route: ActivatedRoute,
-  ) { }
+  @Output('onClickSave') onClickSaveEmitt = new EventEmitter<void>();
+  @Output('onClickEdit') onClickEditEmitt = new EventEmitter<Course>();
+  @Output('onClickDelete') onClickDeleteEmitt = new EventEmitter<string>();
+
+  constructor() { }
 
   onClickNew() {
-    this.router.navigate(['new'], { relativeTo: this.route });
+    this.onClickSaveEmitt.emit();
   }
 
-  onClickActionEdit(course: Course) {
-    console.log(course);
+  onClickEdit(course: Course) {
+    this.onClickEditEmitt.emit(course);
   }
 
   onClickDelete(courseId: string) {
-    console.log(courseId);
+    this.onClickDeleteEmitt.emit(courseId);
   }
 
   @HostListener('document:keydown.alt.n', ['$event'])

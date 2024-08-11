@@ -19,11 +19,25 @@ export class CoursesComponent implements OnInit {
     private readonly coursesService: CoursesService,
     private readonly dialog: MatDialog,
     private readonly title: Title,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
   ) { }
 
   ngOnInit(): void {
     this.initTitle();
     this.listCourses();
+  }
+
+  onClickSave() {
+    this.router.navigate(['new'], { relativeTo: this.route });
+  }
+
+  onClickEdit(course: Course) {
+    console.log(course);
+  }
+
+  onClickDelete(courseId: string) {
+    console.log(courseId);
   }
 
   listCourses() {
@@ -35,7 +49,7 @@ export class CoursesComponent implements OnInit {
       },
       error: err => {
         this.showMessage(
-          'Atenção!', 
+          'Atenção!',
           'contate o administrador do sistema!'
         );
       }

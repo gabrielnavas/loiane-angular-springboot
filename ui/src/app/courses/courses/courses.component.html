@@ -6,7 +6,10 @@
     </mat-toolbar>
   </mat-card-title>
   <mat-card-content>
-    <app-courses-list 
+    <app-courses-list  
+      (onClickSave)="onClickSave()" 
+      (onClickEdit)="onClickEdit($event)" 
+      (onClickDelete)="onClickDelete($event)" 
       [courses]="courses" 
       [isLoadingCourses]="isLoadingCourses">
     </app-courses-list>
