@@ -1,8 +1,8 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
-import { FormBuilder, NonNullableFormBuilder, Validators } from '@angular/forms';
-import { CoursesService } from '../services/courses.service';
+import { NonNullableFormBuilder, Validators } from '@angular/forms';
+import { CoursesService } from '../../services/courses.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ErrorDialogComponent } from '../../shared/components/error-dialog/error-dialog.component';
+import { ErrorDialogComponent } from '../../../shared/components/error-dialog/error-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
 import { Location } from '@angular/common';

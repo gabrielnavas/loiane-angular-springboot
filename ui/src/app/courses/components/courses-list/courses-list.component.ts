@@ -1,9 +1,5 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
-import { Course } from '../model/course';
-import { ActivatedRoute, Router } from '@angular/router';
-import { CoursesService } from '../services/courses.service';
-import { MatDialog } from '@angular/material/dialog';
-import { ErrorDialogComponent } from '../../shared/components/error-dialog/error-dialog.component';
+import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { Course } from '../../model/course';
 
 @Component({
   selector: 'app-courses-list',
