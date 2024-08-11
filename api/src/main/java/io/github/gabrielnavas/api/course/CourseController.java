@@ -25,7 +25,7 @@ public class CourseController {
     }
 
     @GetMapping("/{course-id}")
-    public ResponseEntity<CourseResponse> get(
+    public ResponseEntity<CourseResponse> getById(
             @PathVariable("course-id") UUID courseId
     ) {
         try {
