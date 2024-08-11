@@ -20,10 +20,10 @@
       </button>
     </th>
     <td mat-cell *matCellDef="let course">
-      <button mat-icon-button color="primary" aria-label="Editar um curso" (click)="onClickActionEdit(course)">
+      <button mat-icon-button color="primary" matTooltip="Editar esse curso" aria-label="Editar um curso" (click)="onClickActionEdit(course)">
         <mat-icon fontIcon="edit"></mat-icon>
       </button>
-      <button mat-icon-button color="warn" aria-label="Remover um curso" (click)="onClickDelete(course.id)">
+      <button mat-icon-button color="warn" matTooltip="Remover esse curso" aria-label="Remover um curso" (click)="onClickDelete(course.id)">
         <mat-icon fontIcon="delete"></mat-icon>
       </button>
     </td>
