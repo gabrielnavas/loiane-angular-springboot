@@ -5,11 +5,12 @@ spring:
     multipart:
       max-file-size: 50MB
 
-
 springdoc:
   default-produces-media-type: application/json
 
 server:
+  error:
+    include-stacktrace: never
   servlet:
     context-path: /api/v1/
 
