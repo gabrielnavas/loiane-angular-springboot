@@ -41,7 +41,7 @@ export class CourseFormComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.initTitle()
-    this.loadCourse();
+    this.loadCourseEdit();
   }
 
   ngAfterViewInit(): void {
@@ -52,7 +52,7 @@ export class CourseFormComponent implements OnInit, AfterViewInit {
   onClickFinishForm() {
     if (this.form.value.id) {
       this.onClickEdit();
-      this.location.back();
+      this.onClickCancel();
     } else {
       this.onClickSave();
     }
@@ -90,7 +90,7 @@ export class CourseFormComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private loadCourse() {
+  private loadCourseEdit() {
     const course = this.route.snapshot.data['course'] as Course | undefined;
     if (course !== undefined) {
       const category = this.categories.find(
