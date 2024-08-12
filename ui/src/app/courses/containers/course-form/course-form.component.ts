@@ -93,13 +93,11 @@ export class CourseFormComponent implements OnInit, AfterViewInit {
   private loadCourseEdit() {
     const course = this.route.snapshot.data['course'] as Course | undefined;
     if (course !== undefined) {
-      const category = this.categories.find(
-        category => category.id === course.category
-      );
+      const category = ['front-end', 'back-end'].find(category => category === course.category);
       this.form.setValue({
         id: course.id,
         name: course.name,
-        category: category!.id as string,
+        category: category as string,
       })
     }
   }

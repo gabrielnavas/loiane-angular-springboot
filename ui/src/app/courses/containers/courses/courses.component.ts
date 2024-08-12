@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Course } from '../../model/course';
 import { CoursesService } from '../../services/courses.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -21,11 +21,13 @@ export class CoursesComponent implements OnInit {
     private readonly title: Title,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
+    private readonly detectChangesRef: ChangeDetectorRef,
   ) { }
 
   ngOnInit(): void {
     this.initTitle();
     this.listCourses();
+    this.detectChangesRef.detectChanges();
   }
 
   onClickSave() {

@@ -22,7 +22,8 @@
         <mat-form-field>
           <mat-label>Categoria</mat-label>
           <mat-select formControlName="category">
-            <mat-option *ngFor="let category of categories" [value]="category.id">{{ category.text }}</mat-option>
+            <mat-option value="front-end">Front-End</mat-option>
+            <mat-option value="back-end">Back-End</mat-option>
           </mat-select>
           <mat-error *ngIf="form.get('category')?.touched && form.get('category')?.invalid">
             Categoria é obrigatória.

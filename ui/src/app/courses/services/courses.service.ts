@@ -30,9 +30,6 @@ export class CoursesService {
     return this.http.get<Course[]>(url)
       .pipe(
         first(),// fecha a conexão e inscrições depois da primeira resposta
-        tap(
-          courses => console.log(courses) // log data 
-        )
       );
   }
 
@@ -41,9 +38,6 @@ export class CoursesService {
     return this.http.get<Course>(url)
       .pipe(
         first(),
-        tap(
-          course => console.log(course) // log data 
-        )
       )
   }
 }
