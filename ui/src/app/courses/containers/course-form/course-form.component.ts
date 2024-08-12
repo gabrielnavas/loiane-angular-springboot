@@ -115,7 +115,7 @@ export class CourseFormComponent implements OnInit, AfterViewInit {
   private onSaveSuccess() {
     this.clearForm();
     this.nameInput.nativeElement.focus();
-    this.snack.open('Curso criado!', '', { duration: 5000, })
+    this.snack.open('Curso adicionado!', '', { duration: 5000, })
   }
 
   private onSaveError(err: Error): void {

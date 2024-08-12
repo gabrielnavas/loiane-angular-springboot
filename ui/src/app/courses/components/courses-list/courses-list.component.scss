@@ -6,3 +6,15 @@ table {
 .loading-spinner {
   margin: 1.02rem;
 }
+
+.no-data-row {
+  height: 50px; /* Espaçamento interno */
+  background-color: #f5f5f5; /* Cor de fundo mais clara */
+  text-align: center;
+}
+
+.no-data-cell {
+  color: #757575; /* Cor do texto mais suave */
+  font-size: 16px; /* Tamanho da fonte */
+  margin: 5px 0;
+}

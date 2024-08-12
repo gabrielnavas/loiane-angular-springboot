@@ -31,6 +31,19 @@
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+
+  <!-- Mensagem quando não há dados -->
+  <tr class="mat-row no-data-row" *matNoDataRow>
+    <td  class="mat-cell"  [attr.colspan]="displayedColumns.length">
+      <div class="no-data-cell">
+        Nenhum curso encontrado.
+      </div>
+      <div class="no-data-cell">
+        Clique no botão + para adicionar um novo
+      </div>
+    </td>
+  </tr>
 </table>
 
 
