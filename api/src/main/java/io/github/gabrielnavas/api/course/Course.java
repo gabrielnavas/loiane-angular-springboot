@@ -28,4 +28,7 @@ public class Course {
 
     @Column(nullable = false, name = "created_at")
     private LocalDateTime createdAt;
+
+    @Column(nullable = false, length = 20)
+    private String status;
 }

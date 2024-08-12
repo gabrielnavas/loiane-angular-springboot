@@ -35,6 +35,7 @@ public class CourseService {
                 .name(request.name())
                 .category(request.category())
                 .createdAt(LocalDateTime.now())
+                .status("active")
                 .build();
         course = courseRepository.save(course);
         return CourseResponse.builder()
@@ -63,7 +64,7 @@ public class CourseService {
         if (optionalCourse.isEmpty()) {
             throw new RuntimeException("course not found");
         }
-
+        
         courseRepository.deleteById(courseId);
     }
 
