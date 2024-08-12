@@ -3,7 +3,7 @@ import { NonNullableFormBuilder, Validators } from '@angular/forms';
 import { CoursesService } from '../../services/courses.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorDialogComponent } from '../../../shared/components/error-dialog/error-dialog.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
@@ -105,21 +105,21 @@ export class CourseFormComponent implements OnInit, AfterViewInit {
   private onEditSuccess() {
     this.clearForm();
     this.nameInput.nativeElement.focus();
-    this.snack.open('Curso atualizado!', '', { duration: 5000, })
+    this.showSnackMessage('Curso atualizado!');
   }
 
   private onEditError(err: Error): void {
-    this.showMessage('Atenção!', 'Não foi possível atualizar o curso.')
+    this.showModalMessage('Atenção!', 'Não foi possível atualizar o curso.')
   }
 
   private onSaveSuccess() {
     this.clearForm();
     this.nameInput.nativeElement.focus();
-    this.snack.open('Curso adicionado!', '', { duration: 5000, })
+    this.showSnackMessage('Curso adicionado!');
   }
 
   private onSaveError(err: Error): void {
-    this.showMessage('Atenção!', 'Não foi possível criar um novo curso.')
+    this.showModalMessage('Atenção!', 'Não foi possível criar um novo curso.')
   }
 
   @HostListener('document:keydown.enter', ['$event'])
@@ -132,7 +132,16 @@ export class CourseFormComponent implements OnInit, AfterViewInit {
     this.onClickCancel();
   }
 
-  private showMessage(title: string, content: string) {
+  private showSnackMessage(message: string) {
+    const config = { 
+      duration: 5000, 
+      verticalPosition: 'top', 
+      horizontalPosition: 'right',
+    } as MatSnackBarConfig;
+    this.snack.open(message, "Fechar", config);
+  }
+
+  private showModalMessage(title: string, content: string) {
     this.dialog.open(ErrorDialogComponent, {
       data: {
         title: title,

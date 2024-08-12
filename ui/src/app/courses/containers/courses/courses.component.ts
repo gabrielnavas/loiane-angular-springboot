@@ -6,6 +6,7 @@ import { ErrorDialogComponent } from '../../../shared/components/error-dialog/er
 import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-courses',
@@ -41,17 +42,44 @@ export class CoursesComponent implements OnInit {
   }
 
   onClickDelete(courseId: string) {
-    this.coursesService.delete(courseId)
-      .subscribe({
-        next: () => {
-          this.showSnackMessage("Curso removido!");
-          this.removeCourseFromList(courseId);
-        },
-        error: err => this.showModalMessage(
-          'Atenção!',
-          'contate o administrador do sistema!'
-        )
-      });
+    const course = this.courses.find(course => course.id === courseId)
+    if(course === undefined) {
+      throw new Error("course not found to delete");
+    }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Atenção!',
+        content: `Você realmente deseja remover o curso '${course.name}'?`,
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result === true) {
+        this.coursesService.delete(courseId)
+          .subscribe({
+            next: () => {
+              this.showSnackMessage("Curso removido!");
+              this.removeCourseFromList(courseId);
+            },
+            error: (err: Error) => this.onErrorDeleteCourse(err)
+          });
+      }
+    });
+  }
+
+  private onErrorDeleteCourse(err: Error): void {
+
+    this.showModalMessage(
+      'Atenção!',
+      'contate o administrador do sistema!'
+    );
+  }
+
+  private onErrorListCourses(err: Error): void {
+    this.showModalMessage(
+      'Atenção!',
+      'contate o administrador do sistema!'
+    );
   }
 
   private listCourses() {
@@ -61,12 +89,7 @@ export class CoursesComponent implements OnInit {
         this.courses = courses;
         this.isLoadingCourses = false;
       },
-      error: err => {
-        this.showModalMessage(
-          'Atenção!',
-          'contate o administrador do sistema!'
-        );
-      }
+      error: (err: Error) => this.onErrorListCourses(err)
     });
   }
 

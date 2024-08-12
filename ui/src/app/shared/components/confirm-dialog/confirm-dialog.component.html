@@ -1,0 +1,8 @@
+<h2 mat-dialog-title class="title">{{ data.title }}</h2>
+<mat-dialog-content>
+  <p>{{ data.content }}</p>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-raised-button color="primary" mat-dialog-close>Não</button>
+  <button mat-raised-button color="warn" [mat-dialog-close]="true">Sim</button>
+</mat-dialog-actions>
