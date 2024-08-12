@@ -27,6 +27,25 @@ export class CourseFormComponent implements OnInit, AfterViewInit {
   ];
 
   @ViewChild('nameInput') nameInput!: ElementRef<HTMLInputElement>;
+  
+  getErrorMessage(labelName: string, formName: string): string | undefined {
+    const input = this.form.get(formName);
+    if (input?.hasError('required')) {
+      return `${labelName} é obrigatório`;
+    }
+    
+    if (input?.hasError('minlength')) {
+      const requiredLength = input.errors?.['minlength'].requiredLength;
+      return `${labelName} deve ter no mínimo ${requiredLength} caracteres`;
+    }
+    
+    if (input?.hasError('maxlength')) {
+      const requiredLength = input.errors?.['maxlength'].requiredLength;
+      return `${labelName} deve ter no máximo ${requiredLength} caracteres`;
+    }
+    
+    return '';
+  }
 
   constructor(
     private readonly formBuilder: NonNullableFormBuilder,

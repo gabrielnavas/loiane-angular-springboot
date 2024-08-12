@@ -12,9 +12,7 @@
           <mat-label>Nome</mat-label>
           <input #nameInput matInput placeholder="Ex. John Walker" formControlName="name" minlength="2" maxlength="100">
           <mat-error *ngIf="form.get('name')?.invalid">
-            <span *ngIf="form.get('name')?.hasError('required')">Nome é obrigatório.</span>
-            <span *ngIf="form.get('name')?.hasError('minlength')">Nome deve ter no mínimo {{ nameInput.minLength }} caracteres.</span>
-            <span *ngIf="form.get('name')?.hasError('maxlength')">Nome deve ter no máximo {{ nameInput.maxLength }} caracteres.</span>
+            {{ getErrorMessage('Nome', 'name') }}
           </mat-error>
           <mat-hint>{{ form.value.name!.length }}/{{ nameInput.maxLength }}</mat-hint>
         </mat-form-field>
@@ -26,7 +24,7 @@
             <mat-option value="back-end">Back-End</mat-option>
           </mat-select>
           <mat-error *ngIf="form.get('category')?.touched && form.get('category')?.invalid">
-            Categoria é obrigatória.
+            {{ getErrorMessage('Categoria', 'category') }}
           </mat-error>
         </mat-form-field>
       </form>
