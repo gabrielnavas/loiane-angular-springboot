@@ -1,5 +1,6 @@
 package io.github.gabrielnavas.api.course;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,7 @@ public class CourseController {
 
     @PostMapping
     public ResponseEntity<CourseResponse> save(
-            @RequestBody CourseRequest request
+            @RequestBody @Valid CourseRequest request
     ) {
         CourseResponse courseResponse = courseService.save(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(courseResponse);
@@ -50,7 +51,7 @@ public class CourseController {
     @PatchMapping("/{course-id}")
     public ResponseEntity<CourseResponse> partialUpdate(
             @PathVariable("course-id") UUID courseId,
-            @RequestBody CourseRequest request
+            @RequestBody @Valid CourseRequest request
     ) {
         try {
             courseService.partialUpdate(courseId, request);
