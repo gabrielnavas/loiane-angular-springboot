@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ErrorDialogComponent } from '../../../shared/components/error-dialog/error-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-courses',
@@ -22,6 +23,7 @@ export class CoursesComponent implements OnInit {
     private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly detectChangesRef: ChangeDetectorRef,
+    private readonly snack: MatSnackBar,
   ) { }
 
   ngOnInit(): void {
@@ -39,7 +41,17 @@ export class CoursesComponent implements OnInit {
   }
 
   onClickDelete(courseId: string) {
-    console.log(courseId);
+    this.coursesService.delete(courseId)
+      .subscribe({
+        next: () => {
+          this.snack.open("Curso removido!", "Fechar", {});
+          this.removeCourseFromList(courseId);
+        },
+        error: err => this.showMessage(
+          'Atenção!',
+          'contate o administrador do sistema!'
+        )
+      });
   }
 
   listCourses() {
@@ -65,6 +77,10 @@ export class CoursesComponent implements OnInit {
         content: content
       }
     });
+  }
+
+  private removeCourseFromList(courseId: string) {
+    this.courses = this.courses.filter(course => course.id !== courseId);
   }
 
   private initTitle() {

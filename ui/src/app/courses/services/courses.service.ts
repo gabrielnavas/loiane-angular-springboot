@@ -40,4 +40,12 @@ export class CoursesService {
         first(),
       )
   }
+
+  delete(courseId: string): Observable<void> {
+    const url = `${this.API}/${courseId};`
+    return this.http.delete<void>(url)
+      .pipe(
+        first(),
+      )
+  }
 }
