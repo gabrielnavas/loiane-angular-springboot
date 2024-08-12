@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ErrorDialogComponent } from '../../../shared/components/error-dialog/error-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-courses',
@@ -44,17 +44,17 @@ export class CoursesComponent implements OnInit {
     this.coursesService.delete(courseId)
       .subscribe({
         next: () => {
-          this.snack.open("Curso removido!", "Fechar", {});
+          this.showSnackMessage("Curso removido!");
           this.removeCourseFromList(courseId);
         },
-        error: err => this.showMessage(
+        error: err => this.showModalMessage(
           'Atenção!',
           'contate o administrador do sistema!'
         )
       });
   }
 
-  listCourses() {
+  private listCourses() {
     this.isLoadingCourses = true;
     this.coursesService.list().subscribe({
       next: courses => {
@@ -62,7 +62,7 @@ export class CoursesComponent implements OnInit {
         this.isLoadingCourses = false;
       },
       error: err => {
-        this.showMessage(
+        this.showModalMessage(
           'Atenção!',
           'contate o administrador do sistema!'
         );
@@ -70,13 +70,22 @@ export class CoursesComponent implements OnInit {
     });
   }
 
-  showMessage(title: string, content: string) {
+  private showModalMessage(title: string, content: string) {
     this.dialog.open(ErrorDialogComponent, {
       data: {
         title: title,
         content: content
       }
     });
+  }
+
+  private showSnackMessage(message: string) {
+    const config = { 
+      duration: 5000, 
+      verticalPosition: 'top', 
+      horizontalPosition: 'right',
+    } as MatSnackBarConfig;
+    this.snack.open(message, "Fechar", config);
   }
 
   private removeCourseFromList(courseId: string) {
