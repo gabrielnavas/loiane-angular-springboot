@@ -2,6 +2,8 @@ package io.github.gabrielnavas.api.course;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -14,8 +16,9 @@ import java.util.UUID;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
+@SQLDelete(sql = "UPDATE courses SET status = 'disabled' WHERE id = ?")
+@SQLRestriction("status <> 'disabled'")
 public class Course {
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
