@@ -1,5 +1,6 @@
 package io.github.gabrielnavas.api.course;
 
+import io.github.gabrielnavas.api.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +21,7 @@ public class CourseService {
     public void partialUpdate(UUID courseId, CourseRequest request) {
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
         if (optionalCourse.isEmpty()) {
-            throw new RuntimeException("course not found");
+            throw new EntityNotFoundException("course");
         }
 
         Course course = optionalCourse.get();
@@ -48,7 +49,7 @@ public class CourseService {
     public CourseResponse get(UUID courseId) {
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
         if (optionalCourse.isEmpty()) {
-            throw new RuntimeException("course not found");
+            throw new EntityNotFoundException("course");
         }
 
         Course course = optionalCourse.get();
@@ -62,9 +63,9 @@ public class CourseService {
     public void delete(UUID courseId) {
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
         if (optionalCourse.isEmpty()) {
-            throw new RuntimeException("course not found");
+            throw new EntityNotFoundException("course");
         }
-        
+
         courseRepository.deleteById(courseId);
     }
 

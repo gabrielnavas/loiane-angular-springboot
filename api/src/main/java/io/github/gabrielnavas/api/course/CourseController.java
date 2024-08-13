@@ -29,15 +29,8 @@ public class CourseController {
     public ResponseEntity<CourseResponse> getById(
             @PathVariable("course-id") UUID courseId
     ) {
-        try {
-            CourseResponse courseResponse = courseService.get(courseId);
-            return ResponseEntity.ok(courseResponse);
-        } catch (RuntimeException ex) {
-            if (ex.getMessage().equals("course not found")) {
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity.internalServerError().build();
-        }
+        CourseResponse courseResponse = courseService.get(courseId);
+        return ResponseEntity.ok(courseResponse);
     }
 
     @PostMapping
@@ -53,29 +46,15 @@ public class CourseController {
             @PathVariable("course-id") UUID courseId,
             @RequestBody @Valid CourseRequest request
     ) {
-        try {
-            courseService.partialUpdate(courseId, request);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } catch (RuntimeException ex) {
-            if (ex.getMessage().equals("course not found")) {
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity.internalServerError().build();
-        }
+        courseService.partialUpdate(courseId, request);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping("/{course-id}")
     public ResponseEntity<CourseResponse> delete(
             @PathVariable("course-id") UUID courseId
     ) {
-        try {
-            courseService.delete(courseId);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } catch (RuntimeException ex) {
-            if (ex.getMessage().equals("course not found")) {
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity.internalServerError().build();
-        }
+        courseService.delete(courseId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
