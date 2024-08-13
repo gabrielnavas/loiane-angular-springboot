@@ -17,6 +17,7 @@ import java.util.UUID;
 public class CourseService {
 
     private final CourseRepository courseRepository;
+    private final CourseMapper courseMapper;
 
     public void partialUpdate(UUID courseId, CourseRequest request) {
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
@@ -39,11 +40,7 @@ public class CourseService {
                 .status("active")
                 .build();
         course = courseRepository.save(course);
-        return CourseResponse.builder()
-                .id(course.getId())
-                .name(course.getName())
-                .category(course.getCategory())
-                .build();
+        return courseMapper.map(course);
     }
 
     public CourseResponse get(UUID courseId) {
@@ -53,11 +50,7 @@ public class CourseService {
         }
 
         Course course = optionalCourse.get();
-        return CourseResponse.builder()
-                .id(course.getId())
-                .name(course.getName())
-                .category(course.getCategory())
-                .build();
+        return courseMapper.map(course);
     }
 
     public void delete(UUID courseId) {
@@ -74,11 +67,6 @@ public class CourseService {
         Pageable pageable = PageRequest.of(page, size, sort);
         return courseRepository.findAll(pageable)
                 .stream()
-                .map(course -> CourseResponse.builder()
-                        .id(course.getId())
-                        .name(course.getName())
-                        .category(course.getCategory())
-                        .build()
-                ).toList();
+                .map(courseMapper::map).toList();
     }
 }
