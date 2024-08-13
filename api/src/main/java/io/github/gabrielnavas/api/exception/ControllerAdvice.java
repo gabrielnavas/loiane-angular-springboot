@@ -13,4 +13,10 @@ public class ControllerAdvice {
     public String handleEntityNotException(EntityNotFoundException ex) {
         return ex.getMessage();
     }
+
+    @ExceptionHandler({IllegalArgumentException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleIllegalArgumentException(IllegalArgumentException ex) {
+        return ex.getMessage();
+    }
 }

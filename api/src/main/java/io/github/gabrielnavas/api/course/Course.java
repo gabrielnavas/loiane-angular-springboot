@@ -1,5 +1,6 @@
 package io.github.gabrielnavas.api.course;
 
+import io.github.gabrielnavas.api.category.Category;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
@@ -26,8 +27,8 @@ public class Course {
     @Column(nullable = false, length = 150)
     private String name;
 
-    @Column(nullable = false, length = 150)
-    private String category;
+    @ManyToOne
+    private Category category;
 
     @Column(nullable = false, name = "created_at")
     private LocalDateTime createdAt;

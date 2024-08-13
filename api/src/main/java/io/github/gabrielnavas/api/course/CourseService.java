@@ -1,5 +1,7 @@
 package io.github.gabrielnavas.api.course;
 
+import io.github.gabrielnavas.api.category.Category;
+import io.github.gabrielnavas.api.category.CategoryRepository;
 import io.github.gabrielnavas.api.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -7,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -17,6 +18,7 @@ import java.util.UUID;
 public class CourseService {
 
     private final CourseRepository courseRepository;
+    private final CategoryRepository categoryRepository;
     private final CourseMapper courseMapper;
 
     public void partialUpdate(UUID courseId, CourseRequest request) {
@@ -25,20 +27,25 @@ public class CourseService {
             throw new EntityNotFoundException("course", "id", courseId.toString());
         }
 
+        Optional<Category> optionalCategory = categoryRepository.findByName(request.category());
+        if (optionalCategory.isEmpty()) {
+            throw new EntityNotFoundException("category", "name", request.category());
+        }
+
         Course course = optionalCourse.get();
         course.setName(request.name());
-        course.setCategory(request.category());
+        course.setCategory(optionalCategory.get());
 
         courseRepository.save(course);
     }
 
     public CourseResponse save(CourseRequest request) {
-        Course course = Course.builder()
-                .name(request.name())
-                .category(request.category())
-                .createdAt(LocalDateTime.now())
-                .status("active")
-                .build();
+        Optional<Category> optionalCategory = categoryRepository.findByName(request.category());
+        if (optionalCategory.isEmpty()) {
+            throw new EntityNotFoundException("category", "name", request.category());
+        }
+
+        Course course = courseMapper.map(request, optionalCategory.get());
         course = courseRepository.save(course);
         return courseMapper.map(course);
     }
