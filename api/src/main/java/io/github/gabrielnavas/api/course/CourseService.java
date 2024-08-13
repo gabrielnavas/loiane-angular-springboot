@@ -21,7 +21,7 @@ public class CourseService {
     public void partialUpdate(UUID courseId, CourseRequest request) {
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
         if (optionalCourse.isEmpty()) {
-            throw new EntityNotFoundException("course");
+            throw new EntityNotFoundException("course", "id", courseId.toString());
         }
 
         Course course = optionalCourse.get();
@@ -49,7 +49,7 @@ public class CourseService {
     public CourseResponse get(UUID courseId) {
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
         if (optionalCourse.isEmpty()) {
-            throw new EntityNotFoundException("course");
+            throw new EntityNotFoundException("course", "id", courseId.toString());
         }
 
         Course course = optionalCourse.get();
@@ -63,7 +63,7 @@ public class CourseService {
     public void delete(UUID courseId) {
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
         if (optionalCourse.isEmpty()) {
-            throw new EntityNotFoundException("course");
+            throw new EntityNotFoundException("course", "id", courseId.toString());
         }
 
         courseRepository.deleteById(courseId);
