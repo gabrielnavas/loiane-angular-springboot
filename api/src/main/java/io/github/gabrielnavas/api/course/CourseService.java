@@ -2,6 +2,7 @@ package io.github.gabrielnavas.api.course;
 
 import io.github.gabrielnavas.api.category.Category;
 import io.github.gabrielnavas.api.category.CategoryRepository;
+import io.github.gabrielnavas.api.exception.EntityNotFoundButShouldBeException;
 import io.github.gabrielnavas.api.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -29,7 +30,8 @@ public class CourseService {
 
         Optional<Category> optionalCategory = categoryRepository.findByName(request.category());
         if (optionalCategory.isEmpty()) {
-            throw new EntityNotFoundException("category", "name", request.category());
+            final List<Category> categories = categoryRepository.findAll();
+            throw new EntityNotFoundButShouldBeException("category", "name", request.category(), categories.stream().map(Category::getName).toList());
         }
 
         Course course = optionalCourse.get();
@@ -42,7 +44,8 @@ public class CourseService {
     public CourseResponse save(CourseRequest request) {
         Optional<Category> optionalCategory = categoryRepository.findByName(request.category());
         if (optionalCategory.isEmpty()) {
-            throw new EntityNotFoundException("category", "name", request.category());
+            final List<Category> categories = categoryRepository.findAll();
+            throw new EntityNotFoundButShouldBeException("category", "name", request.category(), categories.stream().map(Category::getName).toList());
         }
 
         Course course = courseMapper.map(request, optionalCategory.get());
