@@ -1,7 +1,11 @@
 package io.github.gabrielnavas.api.course;
 
+import io.github.gabrielnavas.api.lesson.LessonRequest;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+
+import java.util.List;
 
 public record CourseRequest(
 
@@ -11,6 +15,9 @@ public record CourseRequest(
 
         @NotBlank(message = "category is required")
         @Size(min = 2, max = 100, message = "category must have a minimum of 2 characters and a maximum of 100 characters")
-        String category
+        String category,
+
+        @NotEmpty(message = "lessons is required")
+        List<LessonRequest> lessons
 ) {
 }

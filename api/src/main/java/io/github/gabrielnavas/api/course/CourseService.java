@@ -4,6 +4,8 @@ import io.github.gabrielnavas.api.category.Category;
 import io.github.gabrielnavas.api.category.CategoryRepository;
 import io.github.gabrielnavas.api.exception.EntityNotFoundButShouldBeException;
 import io.github.gabrielnavas.api.exception.EntityNotFoundException;
+import io.github.gabrielnavas.api.lesson.Lesson;
+import io.github.gabrielnavas.api.lesson.LessonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +22,7 @@ public class CourseService {
 
     private final CourseRepository courseRepository;
     private final CategoryRepository categoryRepository;
+    private final LessonRepository lessonRepository;
     private final CourseMapper courseMapper;
 
     public void partialUpdate(UUID courseId, CourseRequest request) {
@@ -48,7 +51,16 @@ public class CourseService {
             throw new EntityNotFoundButShouldBeException("category", "name", request.category(), categories.stream().map(Category::getName).toList());
         }
 
-        Course course = courseMapper.map(request, optionalCategory.get());
+        List<Lesson> lessons = request.lessons().stream()
+                .map(lesson -> Lesson.builder()
+                        .name(lesson.name())
+                        .youtubeUrl(lesson.youtubeUrl())
+                        .build()
+                )
+                .toList();
+        lessons = lessonRepository.saveAll(lessons);
+
+        Course course = courseMapper.map(request, optionalCategory.get(), lessons);
         course = courseRepository.save(course);
         return courseMapper.map(course);
     }
