@@ -15,13 +15,29 @@ export class CoursesService {
   ) { }
 
   save(course: Partial<Course>): Observable<void> {
-    const body = { name: course.name, category: course.category };
+    const body = { 
+      name: course.name, 
+      category: course.category, 
+      lessons: [{
+        "name": "Fazer tela",
+        "youtubeUrl": "123abc"
+      }, {
+          "name": "Pintar botão",
+          "youtubeUrl": "abc321"
+      }]
+    };
     return this.http.post<void>(this.API, body);
   }
 
   edit(courseId: string, course: Partial<Course>): Observable<void> {
     const url = `${this.API}/${courseId}`;
-    const body = { name: course.name, category: course.category };
+    const body = { name: course.name, category: course.category, lessons: [{
+      "name": "Fazer tela",
+      "youtubeUrl": "123abc"
+    }, {
+        "name": "Pintar botão",
+        "youtubeUrl": "abc321"
+    }] };
     return this.http.patch<void>(url, body);
   }
 
