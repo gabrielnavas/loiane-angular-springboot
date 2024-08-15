@@ -4,7 +4,7 @@ import io.github.gabrielnavas.api.category.Category;
 import io.github.gabrielnavas.api.category.CategoryRepository;
 import io.github.gabrielnavas.api.exception.EntityNotFoundButShouldBeException;
 import io.github.gabrielnavas.api.exception.EntityNotFoundException;
-import io.github.gabrielnavas.api.lesson.Lesson;
+import io.github.gabrielnavas.api.lesson.LessonMapper;
 import io.github.gabrielnavas.api.lesson.LessonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -23,25 +23,11 @@ public class CourseService {
     private final CourseRepository courseRepository;
     private final CategoryRepository categoryRepository;
     private final LessonRepository lessonRepository;
+    private final LessonMapper lessonMapper;
     private final CourseMapper courseMapper;
 
     public void partialUpdate(UUID courseId, CourseRequest request) {
-        Optional<Course> optionalCourse = courseRepository.findById(courseId);
-        if (optionalCourse.isEmpty()) {
-            throw new EntityNotFoundException("course", "id", courseId.toString());
-        }
 
-        Optional<Category> optionalCategory = categoryRepository.findByName(request.category());
-        if (optionalCategory.isEmpty()) {
-            final List<Category> categories = categoryRepository.findAll();
-            throw new EntityNotFoundButShouldBeException("category", "name", request.category(), categories.stream().map(Category::getName).toList());
-        }
-
-        Course course = optionalCourse.get();
-        course.setName(request.name());
-        course.setCategory(optionalCategory.get());
-
-        courseRepository.save(course);
     }
 
     public CourseResponse save(CourseRequest request) {
@@ -51,16 +37,10 @@ public class CourseService {
             throw new EntityNotFoundButShouldBeException("category", "name", request.category(), categories.stream().map(Category::getName).toList());
         }
 
-        List<Lesson> lessons = request.lessons().stream()
-                .map(lesson -> Lesson.builder()
-                        .name(lesson.name())
-                        .youtubeUrl(lesson.youtubeUrl())
-                        .build()
-                )
-                .toList();
-        lessons = lessonRepository.saveAll(lessons);
+        Course course = courseMapper.map(request);
+        course.setCategory(optionalCategory.get());
+        course.addLessons(request.lessons().stream().map(lessonMapper::map).toList());
 
-        Course course = courseMapper.map(request, optionalCategory.get(), lessons);
         course = courseRepository.save(course);
         return courseMapper.map(course);
     }

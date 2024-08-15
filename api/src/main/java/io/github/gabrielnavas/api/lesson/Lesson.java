@@ -1,5 +1,6 @@
 package io.github.gabrielnavas.api.lesson;
 
+import io.github.gabrielnavas.api.course.Course;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,4 +23,8 @@ public class Lesson {
 
     @Column(nullable = false, length = 20)
     private String youtubeUrl;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id", nullable = false)
+    private Course course;
 }

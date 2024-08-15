@@ -39,6 +39,15 @@ public class Course {
     @Column(nullable = false, length = 20)
     private String status;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Lesson> lessons = new ArrayList<>();
+
+    public void addLesson(Lesson lesson) {
+        lessons.add(lesson);
+        lesson.setCourse(this);
+    }
+
+    public void addLessons(List<Lesson> lessons) {
+        lessons.forEach(this::addLesson);
+    }
 }
