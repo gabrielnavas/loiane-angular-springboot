@@ -50,4 +50,8 @@ public class Course {
     public void addLessons(List<Lesson> lessons) {
         lessons.forEach(this::addLesson);
     }
+
+    public void clearLessons() {
+        this.lessons.clear();
+    }
 }

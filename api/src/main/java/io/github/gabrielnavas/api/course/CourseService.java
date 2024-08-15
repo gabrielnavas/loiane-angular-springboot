@@ -4,6 +4,7 @@ import io.github.gabrielnavas.api.category.Category;
 import io.github.gabrielnavas.api.category.CategoryRepository;
 import io.github.gabrielnavas.api.exception.EntityNotFoundButShouldBeException;
 import io.github.gabrielnavas.api.exception.EntityNotFoundException;
+import io.github.gabrielnavas.api.lesson.Lesson;
 import io.github.gabrielnavas.api.lesson.LessonMapper;
 import io.github.gabrielnavas.api.lesson.LessonRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,9 +28,30 @@ public class CourseService {
     private final CourseMapper courseMapper;
 
     public void partialUpdate(UUID courseId, CourseRequest request) {
+        Optional<Course> optionalCourse = courseRepository.findById(courseId);
+        if (optionalCourse.isEmpty()) {
+            throw new EntityNotFoundException("course", "id", courseId.toString());
+        }
 
+        Optional<Category> optionalCategory = categoryRepository.findByName(request.category());
+        if (optionalCategory.isEmpty()) {
+            final List<Category> categories = categoryRepository.findAll();
+            throw new EntityNotFoundButShouldBeException("category", "name", request.category(), categories.stream().map(Category::getName).toList());
+        }
+
+        Course course = optionalCourse.get();
+
+        List<Lesson> lessonsToDelete = course.getLessons();
+        lessonRepository.deleteAll(lessonsToDelete);
+        course.clearLessons();
+
+        course.setCategory(optionalCategory.get());
+        course.addLessons(request.lessons().stream().map(lessonMapper::map).toList());
+
+        courseRepository.save(course);
     }
 
+    // TODO: add transaction annotation
     public CourseResponse save(CourseRequest request) {
         Optional<Category> optionalCategory = categoryRepository.findByName(request.category());
         if (optionalCategory.isEmpty()) {
