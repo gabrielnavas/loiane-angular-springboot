@@ -1,7 +1,7 @@
 services:
   postgres:
     container_name: loiane-courses
-    image: postgres
+    image: postgres:14.3
     restart: always
     environment:
       POSTGRES_PASSWORD: postgres123
