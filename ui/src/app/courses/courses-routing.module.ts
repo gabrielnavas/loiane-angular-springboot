@@ -10,7 +10,7 @@ const routes: Routes = [{
 }, {
   path: 'new',
   component: CourseFormComponent,
-  // resolve: { course: courseResolver }
+  resolve: { course: courseResolver }
 }, {
   path: 'edit/:course-id',
   component: CourseFormComponent,

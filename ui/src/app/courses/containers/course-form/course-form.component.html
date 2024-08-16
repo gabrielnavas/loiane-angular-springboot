@@ -3,16 +3,17 @@
     <mat-card-header>
       <mat-toolbar color="primary">
         <mat-card-title>{{ form.value.id ? 'Atualize o curso' : 'Novo curso' }}</mat-card-title>
-        <mat-card-subtitle>{{ form.value.id ? 'Atualize os dados necessários' : 'Adicione os dados necessários' }} </mat-card-subtitle>
+        <mat-card-subtitle>{{ form.value.id ? 'Atualize os dados necessários' : 'Adicione os dados necessários' }}
+        </mat-card-subtitle>
       </mat-toolbar>
     </mat-card-header>
-    <mat-card-content>      
+    <mat-card-content>
       <form [formGroup]="form">
         <mat-form-field>
           <mat-label>Nome</mat-label>
-          <input #nameInput matInput placeholder="Ex. John Walker" formControlName="name" minlength="2" maxlength="100">
+          <input #nameInput matInput placeholder="Ex. Spring Boot" formControlName="name" minlength="2" maxlength="100">
           <mat-error *ngIf="form.get('name')?.invalid">
-            {{ getErrorMessage('Nome', 'name') }}
+            {{ formUtilsService.getErrorMessage(form, 'Nome', 'name') }}
           </mat-error>
           <mat-hint align='end'>{{ form.value.name!.length }}/{{ nameInput.maxLength }}</mat-hint>
         </mat-form-field>
@@ -24,14 +25,64 @@
             <mat-option value="back-end">Back-End</mat-option>
           </mat-select>
           <mat-error *ngIf="form.get('category')?.touched && form.get('category')?.invalid">
-            {{ getErrorMessage('Categoria', 'category') }}
+            {{ formUtilsService.getErrorMessage(form, 'Categoria', 'category') }}
           </mat-error>
         </mat-form-field>
+
+        <mat-toolbar class="lissons-container">
+          <span>Aulas</span>
+          <button class="lissons-container__button" mat-mini-fab color="accent"
+            matTooltip="'Alt + L' para incluir uma lição" aria-label="Incluir uma lição" (click)="includeLessonForm()">
+            <mat-icon fontIcon="add"></mat-icon>
+          </button>
+        </mat-toolbar>
+
+        <mat-error *ngIf="formUtilsService.isFormArrayRequired(form, 'lessons')">
+          {{ formUtilsService.getErrorMessage(form, 'Lições', 'lessons') }}
+        </mat-error>
+
+        @for (lesson of lessonsFormArray; track i; let i = $index;) {
+        <table style="width: 100%;" formArrayName="lessons">
+          <tbody>
+            <tr class="lissons-container__row" [formGroupName]="i">
+              <td style="width: 65%;">
+                <mat-form-field class="full-width">
+                  <mat-label>Nome</mat-label>
+                  <input matInput placeholder="Ex. Primeira aula" formControlName="name" #name />
+                  <mat-error
+                    *ngIf="lessonsFormArray[i].get('name')?.touched && lessonsFormArray[i].get('name')?.invalid">
+                    {{ formUtilsService.getErrorMessageArray(form, 'lessons', 'Nome', 'name', i) }}
+                  </mat-error>
+                </mat-form-field>
+              </td>
+              <td style="width: 35%;">
+                <mat-form-field class="full-width">
+                  <mat-label>URL do Youtube</mat-label>
+                  <span matPrefix>https://youtube.br/</span>
+                  <input matInput placeholder="Ex. abc123" formControlName="youtubeUrl" #youtubeUrl />
+                  <mat-error
+                    *ngIf="lessonsFormArray[i].get('youtubeUrl')?.touched && lessonsFormArray[i].get('youtubeUrl')?.invalid">
+                    {{ formUtilsService.getErrorMessageArray(form, 'lessons', 'URL do Youtube', 'youtubeUrl', i) }}
+                  </mat-error>
+                </mat-form-field>
+              </td>
+              <td style="display: flex;  padding-top: 5px;">
+                <button mat-icon-button color="warn" (click)="removeByIndexLessonForm(i)">
+                  <mat-icon fontIcon="delete"></mat-icon>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        }
+
       </form>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-raised-button color="primary" (click)="onClickFinishForm()" matTooltip="'Enter' para salvar esse curso">{{ form.value.id ? 'Atualizar' : 'Salvar' }}</button>
-      <button mat-stroked-button style="margin-left: 1.05rem;" (click)="onClickCancel()" matTooltip="'ESC' para cancelar">Cancelar</button>
+      <button mat-raised-button color="primary" (click)="onSubmit()" matTooltip="'Enter' para salvar esse curso">{{
+        form.value.id ? 'Atualizar' : 'Salvar' }}</button>
+      <button mat-stroked-button style="margin-left: 1.05rem;" (click)="onClickCancel()"
+        matTooltip="'ESC' para cancelar">Cancelar</button>
     </mat-card-actions>
   </mat-card>
 </div>

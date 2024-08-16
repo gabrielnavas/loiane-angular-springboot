@@ -15,29 +15,21 @@ export class CoursesService {
   ) { }
 
   save(course: Partial<Course>): Observable<void> {
-    const body = { 
-      name: course.name, 
-      category: course.category, 
-      lessons: [{
-        "name": "Fazer tela",
-        "youtubeUrl": "123abc"
-      }, {
-          "name": "Pintar botão",
-          "youtubeUrl": "abc321"
-      }]
+    const body = {
+      name: course.name,
+      category: course.category,
+      lessons: course.lessons?.map(({ name, youtubeUrl }) => ({ name, youtubeUrl }))
     };
     return this.http.post<void>(this.API, body);
   }
 
   edit(courseId: string, course: Partial<Course>): Observable<void> {
     const url = `${this.API}/${courseId}`;
-    const body = { name: course.name, category: course.category, lessons: [{
-      "name": "Fazer tela",
-      "youtubeUrl": "123abc"
-    }, {
-        "name": "Pintar botão",
-        "youtubeUrl": "abc321"
-    }] };
+    const body = {
+      name: course.name, 
+      category: course.category, 
+      lessons: course.lessons,
+    };
     return this.http.patch<void>(url, body);
   }
 
@@ -45,7 +37,7 @@ export class CoursesService {
     const url = `${this.API}?page=0&size=10`;
     return this.http.get<Course[]>(url)
       .pipe(
-        first(),// fecha a conexão e inscrições depois da primeira resposta
+        first(),
       );
   }
 

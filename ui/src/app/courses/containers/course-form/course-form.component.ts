@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { NonNullableFormBuilder, Validators } from '@angular/forms';
+import { FormControl, FormGroup, NonNullableFormBuilder, UntypedFormArray, Validators } from '@angular/forms';
 import { CoursesService } from '../../services/courses.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorDialogComponent } from '../../../shared/components/error-dialog/error-dialog.component';
@@ -8,6 +8,8 @@ import { Title } from '@angular/platform-browser';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Course } from '../../model/course';
+import { Lesson } from '../../model/lesson';
+import { FormUtilsService } from '../../../shared/form/form-utils.service';
 
 @Component({
   selector: 'app-course-form',
@@ -15,11 +17,7 @@ import { Course } from '../../model/course';
   styleUrl: './course-form.component.scss'
 })
 export class CourseFormComponent implements OnInit, AfterViewInit {
-  form = this.formBuilder.group({
-    id: ['',],
-    name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
-    category: ['', Validators.required]
-  });
+  form!: FormGroup;
 
   categories = [
     { id: 'front-end', text: 'Front-end' },
@@ -37,11 +35,12 @@ export class CourseFormComponent implements OnInit, AfterViewInit {
     private readonly title: Title,
     private readonly location: Location,
     private readonly route: ActivatedRoute,
+    protected readonly formUtilsService: FormUtilsService
   ) { }
 
   ngOnInit(): void {
     this.initTitle()
-    this.loadCourseEdit();
+    this.initForm();
   }
 
   ngAfterViewInit(): void {
@@ -49,12 +48,17 @@ export class CourseFormComponent implements OnInit, AfterViewInit {
     this.detectChangesRef.detectChanges();
   }
 
-  onClickFinishForm() {
+  get lessonsFormArray() {
+    const lessonsForms = <UntypedFormArray>this.form.get('lessons')
+    return lessonsForms.controls
+  }
+
+  onSubmit() {
     if (this.form.value.id) {
-      this.onClickEdit();
+      this.onEdit();
       this.onClickCancel();
     } else {
-      this.onClickSave();
+      this.onSave();
     }
   }
 
@@ -63,38 +67,60 @@ export class CourseFormComponent implements OnInit, AfterViewInit {
   }
 
 
-  getErrorMessage(labelName: string, formName: string): string | undefined {
-    const input = this.form.get(formName);
-    if (input?.hasError('required')) {
-      return `${labelName} é obrigatório`;
-    }
-    
-    if (input?.hasError('minlength')) {
-      const requiredLength = input.errors?.['minlength'].requiredLength;
-      return `${labelName} deve ter no mínimo ${requiredLength} caracteres`;
-    }
-    
-    if (input?.hasError('maxlength')) {
-      const requiredLength = input.errors?.['maxlength'].requiredLength;
-      return `${labelName} deve ter no máximo ${requiredLength} caracteres`;
-    }
-    
-    return '';
+  includeLessonForm() {
+    const lessonsForms = <UntypedFormArray>this.form.get('lessons');
+    const emptyLesson = this.createLesson();
+    lessonsForms.push(emptyLesson);
   }
 
-  private onClickSave() {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
+  removeByIndexLessonForm(index: number) {
+    const lessonsForms = <UntypedFormArray>this.form.get('lessons');
+    lessonsForms.removeAt(index);
+  }
+
+  private retrieaveLessons(course: Course): FormGroup[] {
+    const lessons = [] as FormGroup[]
+    if (course?.lessons.length > 0) {
+      course.lessons.forEach(lesson => lessons.push(this.createLesson(lesson)));
     } else {
+      const emptyLesson = this.createLesson();
+      lessons.push(emptyLesson)
+    }
+    return lessons;
+  }
+
+  private createLesson(lesson: Lesson = {
+    id: '',
+    name: '',
+    youtubeUrl: ''
+  }): FormGroup {
+    return this.formBuilder.group({
+      id: [lesson.id],
+      name: [lesson.name, [
+        Validators.required,
+        Validators.minLength(5),
+        Validators.maxLength(100)
+      ]],
+      youtubeUrl: [lesson.youtubeUrl, [
+        Validators.required,
+        Validators.minLength(10),
+        Validators.maxLength(11)
+      ]],
+    })
+  }
+
+  private onSave() {
+    if (this.form.valid) {
       this.courseService.save(this.form.value).subscribe({
         next: () => this.onSaveSuccess(),
         error: (err: Error) => this.onSaveError(err)
       })
+    } else {
+      this.form.markAllAsTouched();
     }
   }
 
-  private onClickEdit() {
+  private onEdit() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -110,16 +136,26 @@ export class CourseFormComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private loadCourseEdit() {
-    const course = this.route.snapshot.data['course'] as Course | undefined;
-    if (course !== undefined) {
-      const category = ['front-end', 'back-end'].find(category => category === course.category);
-      this.form.setValue({
-        id: course.id,
-        name: course.name,
-        category: category as string,
-      })
+  private initForm() {
+    const course = this.route.snapshot.data['course'] as Course;
+
+    // TODO: buscar no back do end
+    let category = ['front-end', 'back-end'].find(category => category === course.category);
+    if (category === undefined) {
+      category = ''
     }
+
+    this.form = this.formBuilder.group({
+      id: ['',],
+      name: ['', [Validators.required,
+      Validators.minLength(2),
+      Validators.maxLength(100)
+      ]],
+      category: ['', Validators.required],
+      lessons: this.formBuilder.array(this.retrieaveLessons(course), [Validators.required])
+    });
+    console.log(this.form);
+    console.log(this.form.value);
   }
 
   private onEditSuccess() {
@@ -144,7 +180,7 @@ export class CourseFormComponent implements OnInit, AfterViewInit {
 
   @HostListener('document:keydown.enter', ['$event'])
   private handleEnterKey(event: KeyboardEvent) {
-    this.onClickSave();
+    this.onSave();
   }
 
   @HostListener('document:keydown.esc', ['$event'])
@@ -152,10 +188,15 @@ export class CourseFormComponent implements OnInit, AfterViewInit {
     this.onClickCancel();
   }
 
+  @HostListener('document:keydown.alt.l', ['$event'])
+  private handleAltL(event: KeyboardEvent) {
+    this.includeLessonForm()
+  }
+
   private showSnackMessage(message: string) {
-    const config = { 
-      duration: 5000, 
-      verticalPosition: 'top', 
+    const config = {
+      duration: 5000,
+      verticalPosition: 'top',
       horizontalPosition: 'right',
     } as MatSnackBarConfig;
     this.snack.open(message, "Fechar", config);
