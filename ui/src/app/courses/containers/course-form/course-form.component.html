@@ -13,7 +13,7 @@
           <mat-label>Nome</mat-label>
           <input #nameInput matInput placeholder="Ex. Spring Boot" formControlName="name" minlength="2" maxlength="100">
           <mat-error *ngIf="form.get('name')?.invalid">
-            {{ formUtilsService.getErrorMessage(form, 'Nome', 'name') }}
+            {{ formUtilsService.getErrorMessage(form, 'name') }}
           </mat-error>
           <mat-hint align='end'>{{ form.value.name!.length }}/{{ nameInput.maxLength }}</mat-hint>
         </mat-form-field>
@@ -25,7 +25,7 @@
             <mat-option value="back-end">Back-End</mat-option>
           </mat-select>
           <mat-error *ngIf="form.get('category')?.touched && form.get('category')?.invalid">
-            {{ formUtilsService.getErrorMessage(form, 'Categoria', 'category') }}
+            {{ formUtilsService.getErrorMessage(form, 'category') }}
           </mat-error>
         </mat-form-field>
 
@@ -38,7 +38,7 @@
         </mat-toolbar>
 
         <mat-error *ngIf="formUtilsService.isFormArrayRequired(form, 'lessons')">
-          {{ formUtilsService.getErrorMessage(form, 'Lições', 'lessons') }}
+          {{ formUtilsService.getErrorMessage(form, 'lessons') }}
         </mat-error>
 
         @for (lesson of lessonsFormArray; track i; let i = $index;) {
@@ -51,7 +51,7 @@
                   <input matInput placeholder="Ex. Primeira aula" formControlName="name" #name />
                   <mat-error
                     *ngIf="lessonsFormArray[i].get('name')?.touched && lessonsFormArray[i].get('name')?.invalid">
-                    {{ formUtilsService.getErrorMessageArray(form, 'lessons', 'Nome', 'name', i) }}
+                    {{ formUtilsService.getErrorMessageArray(form, 'lessons', 'name', i) }}
                   </mat-error>
                 </mat-form-field>
               </td>
@@ -62,7 +62,7 @@
                   <input matInput placeholder="Ex. abc123" formControlName="youtubeUrl" #youtubeUrl />
                   <mat-error
                     *ngIf="lessonsFormArray[i].get('youtubeUrl')?.touched && lessonsFormArray[i].get('youtubeUrl')?.invalid">
-                    {{ formUtilsService.getErrorMessageArray(form, 'lessons', 'URL do Youtube', 'youtubeUrl', i) }}
+                    {{ formUtilsService.getErrorMessageArray(form, 'lessons', 'youtubeUrl', i) }}
                   </mat-error>
                 </mat-form-field>
               </td>

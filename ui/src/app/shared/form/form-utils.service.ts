@@ -5,41 +5,53 @@ import { FormArray, FormGroup, UntypedFormArray, UntypedFormControl, UntypedForm
   providedIn: 'root'
 })
 export class FormUtilsService {
-  getErrorMessage(formGroup: UntypedFormGroup, labelName: string, formName: string): string | undefined {
+  getErrorMessage(formGroup: UntypedFormGroup, formName: string): string | undefined {
     const input = formGroup.get(formName) as UntypedFormControl;
     if (input === null) {
       return 'Campo inválido';
     }
-    return this.getErrorMessageFromField(input, labelName)
+    return this.getErrorMessageFromField(input)
   }
 
-  getErrorMessageFromField(field: UntypedFormControl, labelName: string): string | undefined {
+  getErrorMessageFromField(field: UntypedFormControl): string | undefined {
     if (field?.hasError('required')) {
-      return `${labelName} é obrigatório`;
+      return `Campo é obrigatório`;
     }
 
     if (field?.hasError('minlength')) {
       const requiredLength = field.errors?.['minlength'].requiredLength;
-      return `${labelName} deve ter no mínimo ${requiredLength} caracteres`;
+      return `Campo deve ter no mínimo ${requiredLength} caracteres`;
     }
 
     if (field?.hasError('maxlength')) {
       const requiredLength = field.errors?.['maxlength'].requiredLength;
-      return `${labelName} deve ter no máximo ${requiredLength} caracteres`;
+      return `Campo deve ter no máximo ${requiredLength} caracteres`;
     }
 
     return 'Campo inválido';
   }
 
-  getErrorMessageArray(formGroup: UntypedFormGroup, formArrayName: string, labelName: string,
-    fieldName: string, index: number) {
+  getErrorMessageArray(formGroup: UntypedFormGroup, formArrayName: string, fieldName: string, index: number) {
     const formArray = formGroup.get(formArrayName) as UntypedFormArray;
     const field = formArray.controls[index].get(fieldName) as UntypedFormControl;
-    return this.getErrorMessageFromField(field, labelName)
+    return this.getErrorMessageFromField(field)
   }
 
   isFormArrayRequired(formGroup: UntypedFormGroup, formArrayName: string) {
     const lessonsForms = formGroup.get(formArrayName) as UntypedFormArray;
     return lessonsForms.touched && lessonsForms.invalid && lessonsForms.hasError('required');
+  }
+
+  validateAllFormFields(formGroup: UntypedFormGroup | UntypedFormArray) {
+    Object.keys(formGroup.controls).forEach(field => {
+      const control = formGroup.get(field);
+
+      if (control instanceof UntypedFormControl) {
+        control.markAsTouched({ onlySelf: true });
+      } else if (control instanceof UntypedFormGroup || control instanceof UntypedFormArray) {
+        control.markAsTouched({ onlySelf: true });
+        this.validateAllFormFields(control);
+      }
+    })
   }
 }
