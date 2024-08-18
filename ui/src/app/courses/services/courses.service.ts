@@ -3,6 +3,7 @@ import { Course } from '../model/course';
 import { HttpClient } from '@angular/common/http';
 import { delay, first, Observable, tap } from 'rxjs';
 import { CourseRequest } from './requests/course-request';
+import { CoursePageResponse } from './responses/course-page-response';
 
 @Injectable({
   providedIn: 'root'
@@ -34,9 +35,9 @@ export class CoursesService {
     return this.http.patch<void>(url, body);
   }
 
-  list(): Observable<Course[]> {
-    const url = `${this.API}?page=0&size=10`;
-    return this.http.get<Course[]>(url)
+  list(page: number = 0, size: number = 10): Observable<CoursePageResponse> {
+    const url = `${this.API}?page=${page}&size=${size}`;
+    return this.http.get<CoursePageResponse>(url)
       .pipe(
         first(),
       );

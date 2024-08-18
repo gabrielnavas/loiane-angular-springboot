@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Course } from '../../model/course';
 import { CoursesService } from '../../services/courses.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-courses',
@@ -16,6 +17,13 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
 export class CoursesComponent implements OnInit {
   courses: Course[] = []
   isLoadingCourses = false;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  pageIndex = 0;
+  pageSize = 10;
+  totalElements = 0;
+  totalPages = 0;
 
   constructor(
     private readonly coursesService: CoursesService,
@@ -29,7 +37,7 @@ export class CoursesComponent implements OnInit {
 
   ngOnInit(): void {
     this.initTitle();
-    this.listCourses();
+    this.refresh();
     this.detectChangesRef.detectChanges();
   }
 
@@ -43,7 +51,7 @@ export class CoursesComponent implements OnInit {
 
   onClickDelete(courseId: string) {
     const course = this.courses.find(course => course.id === courseId)
-    if(course === undefined) {
+    if (course === undefined) {
       throw new Error("course not found to delete");
     }
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -54,7 +62,7 @@ export class CoursesComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result === true) {
+      if (result === true) {
         this.coursesService.delete(courseId)
           .subscribe({
             next: () => {
@@ -67,8 +75,21 @@ export class CoursesComponent implements OnInit {
     });
   }
 
-  private onErrorDeleteCourse(err: Error): void {
+  refresh(event: PageEvent = { length: 0, pageIndex: 0, pageSize: 10 }) {
+    this.isLoadingCourses = true;
+    this.coursesService.list(event.pageIndex, event.pageSize)
+      .subscribe({
+        next: response => {
+          this.courses = response.courses
+          this.totalElements = response.totalElements;
+          this.totalPages = response.totalPages;
+          this.isLoadingCourses = false;
+        },
+        error: (err: Error) => this.onErrorListCourses(err)
+      });
+  }
 
+  private onErrorDeleteCourse(err: Error): void {
     this.showModalMessage(
       'Atenção!',
       'contate o administrador do sistema!'
@@ -82,17 +103,6 @@ export class CoursesComponent implements OnInit {
     );
   }
 
-  private listCourses() {
-    this.isLoadingCourses = true;
-    this.coursesService.list().subscribe({
-      next: courses => {
-        this.courses = courses;
-        this.isLoadingCourses = false;
-      },
-      error: (err: Error) => this.onErrorListCourses(err)
-    });
-  }
-
   private showModalMessage(title: string, content: string) {
     this.dialog.open(ErrorDialogComponent, {
       data: {
@@ -103,9 +113,9 @@ export class CoursesComponent implements OnInit {
   }
 
   private showSnackMessage(message: string) {
-    const config = { 
-      duration: 5000, 
-      verticalPosition: 'top', 
+    const config = {
+      duration: 5000,
+      verticalPosition: 'top',
       horizontalPosition: 'right',
     } as MatSnackBarConfig;
     this.snack.open(message, "Fechar", config);

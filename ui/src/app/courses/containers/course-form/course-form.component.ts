@@ -66,7 +66,7 @@ export class CourseFormComponent implements OnInit, AfterViewInit {
     this.location.back();
   }
 
-
+  
   includeLessonForm() {
     const lessonsForms = <UntypedFormArray>this.form.get('lessons');
     const emptyLesson = this.createLesson();
@@ -167,8 +167,6 @@ export class CourseFormComponent implements OnInit, AfterViewInit {
       category: [course.category.id, Validators.required],
       lessons: this.formBuilder.array(this.retrieaveLessons(course), [Validators.required])
     });
-    console.log(this.form);
-    console.log(this.form.value);
   }
 
   private onEditSuccess() {
