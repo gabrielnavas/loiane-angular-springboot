@@ -1,0 +1,22 @@
+
+<div class="container">
+  <h2 mat-dialog-title>Detalhes do Curso</h2>
+  <mat-dialog-content>
+  <mat-list role="list">
+    
+    <div mat-subheader>Nome</div>
+    <mat-list-item role="listitem">
+      <span>{{ data.name }}</span>
+    </mat-list-item>
+    <div mat-subheader>Categoria</div>
+    <mat-list-item role="listitem">
+      <span>{{ data.category.name }}</span>
+    </mat-list-item>
+  
+    <div mat-subheader>Lições</div>
+    @for (lesson of data.lessons; track lesson.id) {
+      <mat-list-item role="listitem">- {{ lesson.name }}</mat-list-item>
+    }
+  </mat-list>
+  </mat-dialog-content>
+</div>

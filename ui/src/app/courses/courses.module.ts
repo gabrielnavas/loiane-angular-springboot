@@ -7,6 +7,7 @@ import { SharedModule } from '../shared/shared.module';
 import { CourseFormComponent } from './containers/course-form/course-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CoursesListComponent } from './components/courses-list/courses-list.component';
+import { CourseDetailsDialogComponent } from './components/course-details-dialog/course-details-dialog.component';
 
 
 @NgModule({
@@ -14,6 +15,7 @@ import { CoursesListComponent } from './components/courses-list/courses-list.com
     CoursesComponent,
     CourseFormComponent,
     CoursesListComponent,
+    CourseDetailsDialogComponent,
   ],
   imports: [
     CommonModule,

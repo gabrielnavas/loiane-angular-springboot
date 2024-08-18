@@ -20,6 +20,9 @@
       </button>
     </th>
     <td mat-cell *matCellDef="let course">
+      <button mat-icon-button color="secondary" matTooltip="Mostrar esse curso" aria-label="Mostrar esse curso" (click)="onClickShowCourse(course)">
+        <mat-icon fontIcon="description"></mat-icon>
+      </button>
       <button mat-icon-button color="primary" matTooltip="Editar esse curso" aria-label="Editar um curso" (click)="onClickEdit(course)">
         <mat-icon fontIcon="edit"></mat-icon>
       </button>
