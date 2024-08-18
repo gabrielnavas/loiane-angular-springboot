@@ -21,8 +21,9 @@
         <mat-form-field>
           <mat-label>Categoria</mat-label>
           <mat-select formControlName="category">
-            <mat-option value="front-end">Front-End</mat-option>
-            <mat-option value="back-end">Back-End</mat-option>
+            @for (category of categories; track category.id) {
+              <mat-option value="{{ category.id }}">{{ category.name | categoryUppercase }}</mat-option>
+            }
           </mat-select>
           <mat-error *ngIf="form.get('category')?.touched && form.get('category')?.invalid">
             {{ formUtilsService.getErrorMessage(form, 'category') }}

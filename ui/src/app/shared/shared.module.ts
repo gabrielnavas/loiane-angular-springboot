@@ -4,14 +4,16 @@ import { MaterialModule } from './material/material.module';
 import { ErrorDialogComponent } from './components/error-dialog/error-dialog.component';
 
 import { CategoryPipe } from './pipes/category.pipe';
-import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component'; 
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { CategoryUppercasePipe } from './pipes/category-uppercase.pipe'; 
 
 
 @NgModule({
   declarations: [
     ErrorDialogComponent,
     CategoryPipe,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    CategoryUppercasePipe
   ],
   imports: [
     CommonModule,
@@ -20,6 +22,7 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
   exports: [
     MaterialModule,
     CategoryPipe,
+    CategoryUppercasePipe,
   ]
 })
 export class SharedModule { }

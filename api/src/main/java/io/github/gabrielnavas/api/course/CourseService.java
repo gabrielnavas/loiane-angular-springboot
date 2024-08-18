@@ -33,10 +33,10 @@ public class CourseService {
             throw new EntityNotFoundException("course", "id", courseId.toString());
         }
 
-        Optional<Category> optionalCategory = categoryRepository.findByName(request.category());
+        Optional<Category> optionalCategory = categoryRepository.findById(request.categoryId());
         if (optionalCategory.isEmpty()) {
             final List<Category> categories = categoryRepository.findAll();
-            throw new EntityNotFoundButShouldBeException("category", "name", request.category(), categories.stream().map(Category::getName).toList());
+            throw new EntityNotFoundButShouldBeException("category", "id", request.categoryId().toString(), categories.stream().map(Category::getName).toList());
         }
 
         Course course = optionalCourse.get();
@@ -45,6 +45,7 @@ public class CourseService {
         lessonRepository.deleteAll(lessonsToDelete);
         course.clearLessons();
 
+        course.setName(request.name());
         course.setCategory(optionalCategory.get());
         course.addLessons(request.lessons().stream().map(lessonMapper::map).toList());
 
@@ -53,10 +54,10 @@ public class CourseService {
 
     // TODO: add transaction annotation
     public CourseResponse save(CourseRequest request) {
-        Optional<Category> optionalCategory = categoryRepository.findByName(request.category());
+        Optional<Category> optionalCategory = categoryRepository.findById(request.categoryId());
         if (optionalCategory.isEmpty()) {
             final List<Category> categories = categoryRepository.findAll();
-            throw new EntityNotFoundButShouldBeException("category", "name", request.category(), categories.stream().map(Category::getName).toList());
+            throw new EntityNotFoundButShouldBeException("category", "id", request.categoryId().toString(), categories.stream().map(Category::getName).toList());
         }
 
         Course course = courseMapper.map(request);

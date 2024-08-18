@@ -10,6 +10,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Course } from '../../model/course';
 import { Lesson } from '../../model/lesson';
 import { FormUtilsService } from '../../../shared/form/form-utils.service';
+import { CategoriesService } from '../../services/categories.service';
+import { Category } from '../../model/category';
+import { CourseRequest } from '../../services/requests/course-request';
 
 @Component({
   selector: 'app-course-form',
@@ -19,16 +22,14 @@ import { FormUtilsService } from '../../../shared/form/form-utils.service';
 export class CourseFormComponent implements OnInit, AfterViewInit {
   form!: FormGroup;
 
-  categories = [
-    { id: 'front-end', text: 'Front-end' },
-    { id: 'back-end', text: 'Back-end' },
-  ];
+  categories: Category[] = [];
 
   @ViewChild('nameInput') nameInput!: ElementRef<HTMLInputElement>;
 
   constructor(
     private readonly formBuilder: NonNullableFormBuilder,
     private readonly courseService: CoursesService,
+    private readonly categoryService: CategoriesService,
     private readonly dialog: MatDialog,
     private readonly snack: MatSnackBar,
     private readonly detectChangesRef: ChangeDetectorRef,
@@ -56,7 +57,6 @@ export class CourseFormComponent implements OnInit, AfterViewInit {
   onSubmit() {
     if (this.form.value.id) {
       this.onEdit();
-      this.onClickCancel();
     } else {
       this.onSave();
     }
@@ -111,12 +111,21 @@ export class CourseFormComponent implements OnInit, AfterViewInit {
 
   private onSave() {
     if (this.form.valid) {
-      this.courseService.save(this.form.value).subscribe({
+      const category = this.categories.find(category => category.id === this.form.value.category)
+      if (category === undefined) {
+        throw new Error('category not found')
+      }
+      const params = {
+        name: this.form.value.name,
+        categoryId: category.id,
+        lessons: this.form.value.lessons
+      } as CourseRequest
+      this.courseService.save(params).subscribe({
         next: () => this.onSaveSuccess(),
         error: (err: Error) => this.onSaveError(err)
       })
     } else {
-      this.form.markAllAsTouched();
+      this.formUtilsService.validateAllFormFields(this.form);
     }
   }
 
@@ -125,11 +134,16 @@ export class CourseFormComponent implements OnInit, AfterViewInit {
       this.form.markAllAsTouched();
       return;
     } else {
-      this.courseService.edit(
-        this.form.value.id!, {
+      const category = this.categories.find(category => category.id === this.form.value.category)
+      if (category === undefined) {
+        throw new Error('category not found')
+      }
+      const params = {
         name: this.form.value.name,
-        category: this.form.value.category,
-      }).subscribe({
+        categoryId: category.id,
+        lessons: this.form.value.lessons
+      }
+      this.courseService.edit(this.form.value.id!, params).subscribe({
         next: () => this.onEditSuccess(),
         error: (err: Error) => this.onEditError(err)
       })
@@ -139,19 +153,18 @@ export class CourseFormComponent implements OnInit, AfterViewInit {
   private initForm() {
     const course = this.route.snapshot.data['course'] as Course;
 
-    // TODO: buscar no back do end
-    let category = ['front-end', 'back-end'].find(category => category === course.category);
-    if (category === undefined) {
-      category = ''
-    }
+    this.categoryService.list()
+    .subscribe({
+      next: categories => this.categories = categories
+    });
 
     this.form = this.formBuilder.group({
-      id: ['',],
-      name: ['', [Validators.required,
+      id: [course.id,],
+      name: [course.name, [Validators.required,
       Validators.minLength(2),
       Validators.maxLength(100)
       ]],
-      category: ['', Validators.required],
+      category: [course.category.id, Validators.required],
       lessons: this.formBuilder.array(this.retrieaveLessons(course), [Validators.required])
     });
     console.log(this.form);
@@ -162,6 +175,7 @@ export class CourseFormComponent implements OnInit, AfterViewInit {
     this.clearForm();
     this.nameInput.nativeElement.focus();
     this.showSnackMessage('Curso atualizado!');
+    this.location.back();
   }
 
   private onEditError(err: Error): void {

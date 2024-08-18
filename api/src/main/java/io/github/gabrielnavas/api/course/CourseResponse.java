@@ -1,5 +1,6 @@
 package io.github.gabrielnavas.api.course;
 
+import io.github.gabrielnavas.api.category.CategoryResponse;
 import io.github.gabrielnavas.api.lesson.LessonResponse;
 import lombok.Builder;
 
@@ -10,7 +11,7 @@ import java.util.UUID;
 public record CourseResponse(
         UUID id,
         String name,
-        String category,
+        CategoryResponse category,
         List<LessonResponse> lessons
 ) {
 }

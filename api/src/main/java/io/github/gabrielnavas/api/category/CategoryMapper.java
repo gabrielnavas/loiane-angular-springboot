@@ -4,6 +4,7 @@ import io.github.gabrielnavas.api.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -12,8 +13,11 @@ public class CategoryMapper {
 
     private final CategoryRepository categoryRepository;
 
-    public String map(Category category) {
-        return category.getName();
+    public CategoryResponse map(Category category) {
+        return CategoryResponse.builder()
+                .id(category.getId())
+                .name(category.getName())
+                .build();
     }
 
     public Category map(String categoryName) {
@@ -22,5 +26,9 @@ public class CategoryMapper {
             throw new EntityNotFoundException("category", "name", categoryName);
         }
         return optionalCategory.get();
+    }
+
+    public List<CategoryResponse> map(List<Category> categories) {
+        return categories.stream().map(this::map).toList();
     }
 }
