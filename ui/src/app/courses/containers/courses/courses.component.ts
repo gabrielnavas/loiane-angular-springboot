@@ -24,6 +24,7 @@ export class CoursesComponent implements OnInit {
   pageSize = 10;
   totalElements = 0;
   totalPages = 0;
+  sizeOptions = [10, 20, 30, 40, 50, 70, 90, 110, 150, 200];
 
   constructor(
     private readonly coursesService: CoursesService,

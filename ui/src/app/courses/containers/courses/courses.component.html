@@ -10,7 +10,7 @@
       (onClickDelete)="onClickDelete($event)" [courses]="courses" [isLoadingCourses]="isLoadingCourses">
     </app-courses-list>
 
-    <mat-paginator [pageSizeOptions]="[5,10,15,20,25,30,35,40,50,70,90,110]" [pageIndex]="pageIndex"
+    <mat-paginator [pageSizeOptions]="sizeOptions" [pageIndex]="pageIndex"
       [pageSize]="pageSize" [length]="totalElements" (page)="refresh($event)" showFirstLastButtons
       aria-label="Select page">
     </mat-paginator>

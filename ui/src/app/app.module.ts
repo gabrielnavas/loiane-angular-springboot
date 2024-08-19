@@ -7,6 +7,11 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { MaterialModule } from './shared/material/material.module';
 import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
 
+import { LOCALE_ID } from '@angular/core';
+import localePt from '@angular/common/locales/pt';
+import { registerLocaleData } from '@angular/common';
+
+registerLocaleData(localePt);
 
 @NgModule({
   declarations: [
@@ -22,6 +27,7 @@ import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/
     provideClientHydration(),
     provideAnimationsAsync(),
     provideHttpClient(withFetch()),
+    { provide: LOCALE_ID, useValue: 'pt-BR' },
   ],
   bootstrap: [AppComponent]
 })
