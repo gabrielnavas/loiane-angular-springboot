@@ -8,11 +8,13 @@ import io.github.gabrielnavas.api.lesson.Lesson;
 import io.github.gabrielnavas.api.lesson.LessonMapper;
 import io.github.gabrielnavas.api.lesson.LessonRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -48,6 +50,7 @@ public class CourseService {
         course.setName(request.name());
         course.setCategory(optionalCategory.get());
         course.addLessons(request.lessons().stream().map(lessonMapper::map).toList());
+        course.setUpdatedAt(LocalDateTime.now());
 
         courseRepository.save(course);
     }
@@ -87,11 +90,15 @@ public class CourseService {
         courseRepository.deleteById(courseId);
     }
 
-    public List<CourseResponse> list(int page, int size) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+    public CoursePageResponse list(int page, int size) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt", "updatedAt");
         Pageable pageable = PageRequest.of(page, size, sort);
-        return courseRepository.findAll(pageable)
-                .stream()
-                .map(courseMapper::map).toList();
+        Page<Course> courses = courseRepository.findAll(pageable);
+        return courseMapper.map(
+                courses.getTotalElements(),
+                courses.getTotalPages(),
+                courses.stream().toList()
+        );
+
     }
 }
