@@ -12,9 +12,11 @@
         <mat-form-field>
           <mat-label>Nome</mat-label>
           <input #nameInput matInput placeholder="Ex. Spring Boot" formControlName="name" minlength="2" maxlength="100">
-          <mat-error *ngIf="form.get('name')?.invalid">
-            {{ formUtilsService.getErrorMessage(form, 'name') }}
-          </mat-error>
+          @if (form.get('name')?.invalid) {
+            <mat-error>
+              {{ formUtilsService.getErrorMessage(form, 'name') }}
+            </mat-error>
+          }
           <mat-hint align='end'>{{ form.value.name!.length }}/{{ nameInput.maxLength }}</mat-hint>
         </mat-form-field>
 
@@ -25,9 +27,11 @@
               <mat-option value="{{ category.id }}">{{ category.name | categoryUppercase }}</mat-option>
             }
           </mat-select>
-          <mat-error *ngIf="form.get('category')?.touched && form.get('category')?.invalid">
-            {{ formUtilsService.getErrorMessage(form, 'category') }}
-          </mat-error>
+          @if (form.get('category')?.touched && form.get('category')?.invalid) {
+            <mat-error>
+              {{ formUtilsService.getErrorMessage(form, 'category') }}
+            </mat-error>
+          }
         </mat-form-field>
 
         <mat-toolbar class="lissons-container">
@@ -38,9 +42,11 @@
           </button>
         </mat-toolbar>
 
-        <mat-error *ngIf="formUtilsService.isFormArrayRequired(form, 'lessons')">
-          {{ formUtilsService.getErrorMessage(form, 'lessons') }}
-        </mat-error>
+        @if (formUtilsService.isFormArrayRequired(form, 'lessons')) {
+          <mat-error>
+            {{ formUtilsService.getErrorMessage(form, 'lessons') }}
+          </mat-error>
+        }
 
         @for (lesson of lessonsFormArray; track i; let i = $index;) {
         <table style="width: 100%;" formArrayName="lessons">
@@ -50,10 +56,11 @@
                 <mat-form-field class="full-width">
                   <mat-label>Nome</mat-label>
                   <input matInput placeholder="Ex. Primeira aula" formControlName="name" #name />
-                  <mat-error
-                    *ngIf="lessonsFormArray[i].get('name')?.touched && lessonsFormArray[i].get('name')?.invalid">
-                    {{ formUtilsService.getErrorMessageArray(form, 'lessons', 'name', i) }}
-                  </mat-error>
+                  @if (lessonsFormArray[i].get('name')?.touched && lessonsFormArray[i].get('name')?.invalid) {
+                    <mat-error>
+                      {{ formUtilsService.getErrorMessageArray(form, 'lessons', 'name', i) }}
+                    </mat-error>
+                  }
                 </mat-form-field>
               </td>
               <td style="width: 35%;">
@@ -61,10 +68,11 @@
                   <mat-label>URL do Youtube</mat-label>
                   <span matPrefix>https://youtube.br/</span>
                   <input matInput placeholder="Ex. abc123" formControlName="youtubeUrl" #youtubeUrl />
-                  <mat-error
-                    *ngIf="lessonsFormArray[i].get('youtubeUrl')?.touched && lessonsFormArray[i].get('youtubeUrl')?.invalid">
-                    {{ formUtilsService.getErrorMessageArray(form, 'lessons', 'youtubeUrl', i) }}
-                  </mat-error>
+                  @if (lessonsFormArray[i].get('youtubeUrl')?.touched && lessonsFormArray[i].get('youtubeUrl')?.invalid) {
+                    <mat-error>
+                      {{ formUtilsService.getErrorMessageArray(form, 'lessons', 'youtubeUrl', i) }}
+                    </mat-error>
+                  }
                 </mat-form-field>
               </td>
               <td style="display: flex;  padding-top: 5px;">
