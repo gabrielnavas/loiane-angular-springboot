@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,6 +30,7 @@ public class CourseService {
     private final LessonMapper lessonMapper;
     private final CourseMapper courseMapper;
 
+    @Transactional
     public void partialUpdate(UUID courseId, CourseRequest request) {
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
         if (optionalCourse.isEmpty()) {
@@ -55,7 +57,7 @@ public class CourseService {
         courseRepository.save(course);
     }
 
-    // TODO: add transaction annotation
+    @Transactional
     public CourseResponse save(CourseRequest request) {
         Optional<Category> optionalCategory = categoryRepository.findById(request.categoryId());
         if (optionalCategory.isEmpty()) {
@@ -64,6 +66,7 @@ public class CourseService {
         }
 
         Course course = courseMapper.map(request);
+        course.setCreatedAt(LocalDateTime.now());
         course.setCategory(optionalCategory.get());
         course.addLessons(request.lessons().stream().map(lessonMapper::map).toList());
 
@@ -71,6 +74,7 @@ public class CourseService {
         return courseMapper.map(course);
     }
 
+    @Transactional(readOnly = true)
     public CourseResponse get(UUID courseId) {
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
         if (optionalCourse.isEmpty()) {
@@ -81,6 +85,7 @@ public class CourseService {
         return courseMapper.map(course);
     }
 
+    @Transactional
     public void delete(UUID courseId) {
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
         if (optionalCourse.isEmpty()) {
@@ -90,6 +95,7 @@ public class CourseService {
         courseRepository.deleteById(courseId);
     }
 
+    @Transactional(readOnly = true)
     public CoursePageResponse list(int page, int size) {
         Sort sort = Sort.by(Sort.Direction.DESC, "createdAt", "updatedAt");
         Pageable pageable = PageRequest.of(page, size, sort);
